@@ -46,7 +46,6 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         return AdjustForLeapSeconds(Big(temp), gorahyan);
     }
     const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
-        console.log("Process User Provided DateTime Object...", surfaceDateTime);
         let dt = new Date(surfaceDateTime.getUTCFullYear(), surfaceDateTime.getMonth(), surfaceDateTime.getDate());
         dt.setUTCHours(surfaceDateTime.getHours());
         dt.setUTCMinutes(surfaceDateTime.getMinutes() + (7 * 60));
@@ -87,18 +86,20 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
             gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsForGivenDate = processedDTObject;
         }
 
-        console.log(gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsAtConvergence);
-
         let earthDeltaInMS = gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate
             .minus(gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsAtConvergence);
 
-        console.log("Earth Delta: ", earthDeltaInMS.toNumber());
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.earthDelta = earthDeltaInMS;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.earthDelta = earthDeltaInMS.toNumber();
 
         const {
             bigs: {
                 msPerHahr, // Number of Milliseconds in 1 Hahr
-                vaileeShift, // Constant used to calculate the Vailee
-                prorahnteePerHahr
+                prorahnteePerHahr, // Number of Prorahntee in 1 Hahr
+                deltas: {
+                    hahrShift, vaileeShift, yahrShift,
+                    gartahvoShift, tahvoShift, goranShift
+                }
             }
         } = gorahyan.dniConstants;
 
@@ -109,12 +110,11 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         hahr = earthDeltaInMS.div(msPerHahr);
         hahr = Math.floor(hahr.toNumber());
 
-        let deltaWithHahrRemoved: Big | number;
-        deltaWithHahrRemoved = shiftDelta(hahr, msPerHahr.toNumber(), earthDeltaInMS);
-
-        console.log("Calculated hahr: ", hahr);
-        console.log("Calculated deltaWithHahrRemoved: ", deltaWithHahrRemoved.toNumber());
+        let deltaWithHahrRemoved = shiftDelta(hahr, hahrShift, earthDeltaInMS);
         setCalculatedValue("hahr", hahr);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.hahrShiftedDelta = deltaWithHahrRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.hahrShiftedDelta = deltaWithHahrRemoved.toNumber();
 
         /**
         * Convert Delta to D'ni Prorahntee For Rest of Calculations
@@ -123,7 +123,8 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
             prorahnAdjustment = prorahnteePerHahr.div(msPerHahr),
             deltaInProrahntee = deltaWithHahrRemoved.times(prorahnAdjustment);
 
-        console.log("Calculated deltaInProrahn: ", deltaInProrahntee.toNumber());
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.prorahnteeDelta = deltaInProrahntee;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.prorahnteeDelta = deltaInProrahntee.toNumber();
 
         /**
         * Calculate and Store the Vailee
@@ -131,27 +132,23 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         let vaileeId: Big | number = deltaInProrahntee.div(vaileeShift);
         vaileeId = Math.floor(vaileeId.toNumber());
 
-        console.log("Calculated Vailee prior to adjustment: ", vaileeId);
-
-        let prorahnteeDeltaWithVaileeRemoved: Big | number;
-        prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, vaileeShift.toNumber(), deltaInProrahntee);
-
-        console.log("Calculated prorahnteeDeltaWithVaileeRemoved: ", prorahnteeDeltaWithVaileeRemoved.toNumber());
+        let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, vaileeShift, deltaInProrahntee);
         setCalculatedValue("vailee", vaileeId);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.vaileeShiftedDelta = prorahnteeDeltaWithVaileeRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.vaileeShiftedDelta = prorahnteeDeltaWithVaileeRemoved.toNumber();
 
         /**
         * Calculate and Store the Yahr
         * */
-        let yahr: Big | number = prorahnteeDeltaWithVaileeRemoved.div(Big(78125));
+        let yahr: Big | number = prorahnteeDeltaWithVaileeRemoved.div(yahrShift);
         yahr = Math.floor(yahr.toNumber());
 
-        console.log("Calculated yahr: ", yahr);
-
-        let prorahnteeDeltaWithYahrRemoved: Big | number;
-        prorahnteeDeltaWithYahrRemoved = shiftDelta(yahr, 78125, prorahnteeDeltaWithVaileeRemoved);
-
-        console.log("Calculated prorahnteeDeltaWithYahrRemoved: ", prorahnteeDeltaWithYahrRemoved.toNumber());
+        let prorahnteeDeltaWithYahrRemoved = shiftDelta(yahr, yahrShift, prorahnteeDeltaWithVaileeRemoved);
         setCalculatedValue("yahr", yahr);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.yahrShiftedDelta = prorahnteeDeltaWithYahrRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.yahrShiftedDelta = prorahnteeDeltaWithVaileeRemoved.toNumber();
 
         /**
         * Calculate and Store the Gartahvo
@@ -159,62 +156,52 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         let gartahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(Big(15625));
         gartahvo = Math.floor(gartahvo.toNumber());
 
-        console.log("Calculated gartahvo: ", gartahvo);
-
-        let prorahnteeDeltaWithGartahvoRemoved: Big | number;
-        prorahnteeDeltaWithGartahvoRemoved = shiftDelta(gartahvo, 15625, prorahnteeDeltaWithYahrRemoved);
-
-        console.log("Calculated prorahnteeDeltaWithGartahvoRemoved: ", prorahnteeDeltaWithGartahvoRemoved.toNumber());
+        let prorahnteeDeltaWithGartahvoRemoved = shiftDelta(gartahvo, gartahvoShift, prorahnteeDeltaWithYahrRemoved);
         setCalculatedValue("gartahvo", gartahvo);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.gartahvoShiftedDelta = prorahnteeDeltaWithGartahvoRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.gartahvoShiftedDelta = prorahnteeDeltaWithGartahvoRemoved.toNumber();
 
         /**
         * Calculate and Store the Tahvo
         * */
-        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved.div(Big(625));
+        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved.div(tahvoShift);
         tahvo = Math.floor(tahvo.toNumber());
 
-        console.log("Calculated tahvo: ", tahvo);
-
-        let prorahnteeDeltaWithTahvoRemoved: Big | number;
-        prorahnteeDeltaWithTahvoRemoved = shiftDelta(tahvo, 625, prorahnteeDeltaWithGartahvoRemoved);
-
-        console.log("Calculated prorahnteeDeltaWithTahvoRemoved: ", prorahnteeDeltaWithGartahvoRemoved.toNumber());
-
+        let prorahnteeDeltaWithTahvoRemoved = shiftDelta(tahvo, tahvoShift, prorahnteeDeltaWithGartahvoRemoved);
         setCalculatedValue("tahvo", tahvo);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.tahvoShiftedDelta = prorahnteeDeltaWithTahvoRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.tahvoShiftedDelta = prorahnteeDeltaWithTahvoRemoved.toNumber();
 
         /**
         * Calculate and Store the Gorahn
         * */
-        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(Big(25));
+        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(goranShift);
         gorahn = Math.floor(gorahn.toNumber());
 
-        console.log("Calculated gorahn: ", gorahn);
-
-        let prorahnteeDeltaWithGorahnRemoved: Big | number;
-        prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, 25, prorahnteeDeltaWithTahvoRemoved);
-
-        console.log("Calculated prorahnteeDeltaWithGorahnRemoved: ", prorahnteeDeltaWithGorahnRemoved.toNumber());
+        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, goranShift, prorahnteeDeltaWithTahvoRemoved);
         setCalculatedValue("gorahn", gorahn);
+
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.goranShiftedDelta = prorahnteeDeltaWithTahvoRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.goranShiftedDelta = prorahnteeDeltaWithTahvoRemoved.toNumber();
 
         /**
         * Calculate and Store the Prorahn
         * */
-        let prorahn: number = Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber());
-        console.log("Calculated prorahn: ", prorahn);
+        let prorahn = Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber());
         setCalculatedValue("prorahn", prorahn);
 
         /**
-        * Adjust All Calculated Times As Needed
+        * Adjust All Calculated Times As Needed And Return Final TS Value
         * */
         adjustCalculatedTimes();
-        console.log("Times have been adjusted? ", gorahyan.conversionArtifacts.cavern.readonly);
-
         return _getDniConvertedTimestamp();
     }
 
-    const shiftDelta = function(dniUnit: number, dniUnitShift: number, currentDelta: Big): Big {
+    const shiftDelta = function(dniUnit: number, dniUnitShift: Big, currentDelta: Big): Big {
         let
-            deltaShiftValueToRemove = Big(dniUnit).times(Big(dniUnitShift)),
+            deltaShiftValueToRemove = Big(dniUnit).times(dniUnitShift),
             remainingDelta: Big | number;
 
         remainingDelta = currentDelta.minus(deltaShiftValueToRemove);
@@ -275,8 +262,6 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         // @ts-ignore
         const cavernBigs = gorahyan.conversionArtifacts.cavern.bigs;
         const cavernReadonly = gorahyan.conversionArtifacts.cavern.readonly;
-        console.log("Use new AdjustTimeValue(): ", target);
-        console.log("cavernReadonly: ", cavernReadonly);
 
         // @ts-ignore
         while ((

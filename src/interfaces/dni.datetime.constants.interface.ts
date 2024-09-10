@@ -24,7 +24,14 @@ export interface DniDatetimeConstantsInterface {
         prorahnteePerHahr: Big,
         refProrahnteePerHahr: Big,
         msPerProrahn: Big,
-        vaileeShift: Big,
+        deltas: {
+            hahrShift: Big,
+            vaileeShift: Big,
+            yahrShift: Big,
+            gartahvoShift: Big,
+            tahvoShift: Big,
+            goranShift: Big
+        }
     },
     readonly: {
         msPerHahr: number,
@@ -32,6 +39,13 @@ export interface DniDatetimeConstantsInterface {
         prorahnteePerHahr: number,
         refProrahnteePerHahr: number,
         msPerProrahn: any,
-        vaileeShift: number,
+        deltas: {
+            hahrShift: number,
+            vaileeShift: number,
+            yahrShift: number,
+            gartahvoShift: number,
+            tahvoShift: number,
+            goranShift: number
+        }
     }
 }

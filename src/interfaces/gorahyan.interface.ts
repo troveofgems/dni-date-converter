@@ -25,8 +25,15 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                 tahvo: Big,
                 gorahn: Big,
                 prorahn: Big,
-                timeDeltas: {
-
+                timeDeltasCalculated: {
+                    earthDelta: Big,
+                    hahrShiftedDelta: Big,
+                    prorahnteeDelta: Big,
+                    vaileeShiftedDelta: Big,
+                    yahrShiftedDelta: Big,
+                    gartahvoShiftedDelta: Big,
+                    tahvoShiftedDelta: Big,
+                    goranShiftedDelta: Big
                 }
             },
             readonly: {
@@ -41,8 +48,15 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                 tahvo: number,
                 gorahn: number,
                 prorahn: number,
-                timeDeltas: {
-
+                timeDeltasCalculated: {
+                    earthDelta: number,
+                    hahrShiftedDelta: number,
+                    prorahnteeDelta: number,
+                    vaileeShiftedDelta: number,
+                    yahrShiftedDelta: number,
+                    gartahvoShiftedDelta: number,
+                    tahvoShiftedDelta: number,
+                    goranShiftedDelta: number
                 }
             }
         },

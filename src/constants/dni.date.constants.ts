@@ -35,9 +35,15 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
         prorahnteePerHahr: Big(PRORAHNTEE_PER_HAHR),
         refProrahnteePerHahr: Big(REF_PRORAHNTEE_PER_HAHR),
         msPerProrahn: Big(MS_PER_PRORAHN),
-        vaileeShift:
-            Big(PRORAHNTEE_PER_HAHR)
+        deltas: {
+            hahrShift: Big(MS_PER_HAHR),
+            vaileeShift: Big(PRORAHNTEE_PER_HAHR)
                 .div(TOTAL_DNI_VAILEE),
+            yahrShift: Big(78125),
+            gartahvoShift: Big(15625),
+            tahvoShift: Big(625),
+            goranShift: Big(25)
+        }
     }
 
     // Convert to Cavern Local Time (GMT-0700)
@@ -74,7 +80,14 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
             prorahnteePerHahr: constantsAsBigs.prorahnteePerHahr.toNumber(),
             refProrahnteePerHahr: constantsAsBigs.refProrahnteePerHahr.toNumber(),
             msPerProrahn: constantsAsBigs.msPerProrahn.toPrecision(20),
-            vaileeShift: constantsAsBigs.vaileeShift.toNumber(),
+            deltas: {
+                hahrShift: constantsAsBigs.deltas.hahrShift.toNumber(),
+                vaileeShift: constantsAsBigs.deltas.vaileeShift.toNumber(),
+                yahrShift: constantsAsBigs.deltas.yahrShift.toNumber(),
+                gartahvoShift: constantsAsBigs.deltas.gartahvoShift.toNumber(),
+                tahvoShift: constantsAsBigs.deltas.tahvoShift.toNumber(),
+                goranShift: constantsAsBigs.deltas.goranShift.toNumber()
+            }
         }
     };
 }

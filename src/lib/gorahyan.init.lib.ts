@@ -31,7 +31,17 @@ export default function GorahyanInitLib(DEBUG: boolean = false) {
                     tahvo: Big(0),
                     gorahn: Big(0),
                     prorahn: Big(0),
-                    timeDeltas: {}
+                    timeDeltasCalculated: {
+                        earthDelta: Big(0),
+                        hahrShiftedDelta: Big(0),
+                        prorahnteeDelta: Big(0),
+                        vaileeShiftedDelta: Big(0),
+                        yahrShiftedDelta: Big(0),
+                        gartahvoShiftedDelta: Big(0),
+                        tahvoShiftedDelta: Big(0),
+                        goranShiftedDelta: Big(0)
+                    }
+
                 },
                 readonly: {
                     hahr: 0,
@@ -45,7 +55,16 @@ export default function GorahyanInitLib(DEBUG: boolean = false) {
                     tahvo: 0,
                     gorahn: 0,
                     prorahn: 0,
-                    timeDeltas: {}
+                    timeDeltasCalculated: {
+                        earthDelta: 0,
+                        hahrShiftedDelta: 0,
+                        prorahnteeDelta: 0,
+                        vaileeShiftedDelta: 0,
+                        yahrShiftedDelta: 0,
+                        gartahvoShiftedDelta: 0,
+                        tahvoShiftedDelta: 0,
+                        goranShiftedDelta: 0
+                    }
                 }
             },
             surface: {

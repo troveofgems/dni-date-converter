@@ -2,8 +2,10 @@ import Big from 'big.js';
 import {DniDatetimeConstantsInterface} from "../interfaces/dni.datetime.constants.interface";
 
 const // DO NOT CHANGE THESE VALUES WITHOUT PROPER CONSIDERATION!
-    DATE_OF_CALENDAR_CONVERGENCE_STR = "Leefo 1 9647 DE 0:00:00:000",
+    DNI_DATE_OF_CALENDAR_CONVERGENCE_STR = "Leefo 1 9647 DE 0:00:00:000",
+    EARTH_DATE_OF_CALENDAR_CONVERGENCE_STR = "1991-04-21T09:54:00",
     DATE_OF_CALENDAR_CONVERGENCE = new Date(Date.UTC(1991, 4 - 1, 21, 16, 54, 0)),
+    DATE_OF_CALENDAR_CONVERGENCE_OBJ = DATE_OF_CALENDAR_CONVERGENCE,
     MS_PER_HAHR = 31556925216, // the exact value is 31556925.216 seconds
     REF_DNI_HAHR = 9647, // Date Of Convergence
     PRORAHNTEE_PER_HAHR = 22656250,
@@ -48,7 +50,10 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
 
     return {
         dates: {
-            calendarConvergence: DATE_OF_CALENDAR_CONVERGENCE_STR,
+            calendarConvergence: {
+                earthConvergenceDateTimeString: EARTH_DATE_OF_CALENDAR_CONVERGENCE_STR,
+                earthConvergenceDateTimeObject: DATE_OF_CALENDAR_CONVERGENCE_OBJ
+            },
             utc: {
                 convergence: DATE_OF_CALENDAR_CONVERGENCE,
                 convergenceInMS: DATE_OF_CALENDAR_CONVERGENCE.getMilliseconds()

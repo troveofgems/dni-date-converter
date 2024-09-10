@@ -41,7 +41,9 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                 tahvo: number,
                 gorahn: number,
                 prorahn: number,
-                timeDeltas: {}
+                timeDeltas: {
+
+                }
             }
         },
         surface: {
@@ -78,5 +80,5 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                 }
             }
         }
-    }
+    },
 }

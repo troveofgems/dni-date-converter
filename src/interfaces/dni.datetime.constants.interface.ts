@@ -1,7 +1,10 @@
 import Big from "big.js";
 export interface DniDatetimeConstantsInterface {
     dates: {
-        calendarConvergence: string,
+        calendarConvergence: {
+            earthConvergenceDateTimeString: string,
+            earthConvergenceDateTimeObject: object
+        },
         utc: {
             convergence: Date,
             convergenceInMS: number

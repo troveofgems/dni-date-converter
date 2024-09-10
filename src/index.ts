@@ -6,10 +6,12 @@ import SurfaceConverterLib from "./lib/surface.converter.lib";
 export default class DniGorahyan {
     gorahyan: GorahyanInterface | null;
     surfaceToCavernTimeConverter;
+    cavernToSurfaceTimeConverter: null;
 
     constructor() {
         this.gorahyan = setConvergenceTimeArtifacts(GorahyanInitLib());
         this.surfaceToCavernTimeConverter = SurfaceConverterLib(this.gorahyan);
+        this.cavernToSurfaceTimeConverter = null;
     }
 
     public surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string {

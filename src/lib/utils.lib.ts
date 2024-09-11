@@ -5,8 +5,9 @@ export default function UtilsLib() {
             if (typeof input === 'string') {
                 result = input;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error processing date string:', error);
+            throw new Error(error);
         }
         return result;
     }

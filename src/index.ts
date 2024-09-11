@@ -6,22 +6,15 @@ import CavernConverterLib from "./lib/cavern.converter.lib";
 
 export default class DniGorahyan {
     public gorahyan: GorahyanInterface = setConvergenceTimeArtifacts(GorahyanInitLib()); // Expose Selected Class Internals So Others May Review Calculations/Values As Needed
-    public surfaceToCavernTimeConverter;
-    public cavernToSurfaceTimeConverter;
     public runControlTests;
 
     constructor() {
-        this.surfaceToCavernTimeConverter = this.surfaceToCavernTime; // Sur to Cav - Converter Call
-        this.cavernToSurfaceTimeConverter = this.cavernToSurfaceTime; // Cav to Sur - Converter Call
         this.runControlTests = this._runControlTests;
     }
 
     // Public Methods Available: surfaceToCavernTime, cavernToSurfaceTime, runControlTests
     public surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string {
-        this._handleUninitializedConstructor(
-            (!this.surfaceToCavernTimeConverter || !this.gorahyan),
-            'surfaceToCavernTimeConverter or gorahyan is not initialized'
-        );
+        this._handleUninitializedConstructorArtifact();
         let
             converter = SurfaceConverterLib(this.gorahyan),
             { convertSurfaceTimestampToCavern } = converter;
@@ -31,25 +24,22 @@ export default class DniGorahyan {
     public cavernToSurfaceTime(cavernDateTimeString: string): {
 
     } {
-        this._handleUninitializedConstructor(
-            (!this.cavernToSurfaceTimeConverter || !this.gorahyan),
-            'cavernToSurfaceTimeConverter or gorahyan is not initialized'
-        );
-
+        this._handleUninitializedConstructorArtifact();
         let
             converter = CavernConverterLib(this.gorahyan),
             { convertCavernTimestampToSurface } = converter;
-
         return convertCavernTimestampToSurface(cavernDateTimeString);
+    }
+
+    public simulateCatastrophicObjectFailure(jestOverride = true) {
+        // @ts-ignore
+        this.gorahyan = null;
+        return this._handleUninitializedConstructorArtifact(jestOverride);
     }
 
     // Private Methods
     private _runControlTests(DEBUG: boolean = true) {
-        this._handleUninitializedConstructor(
-            (!this.surfaceToCavernTimeConverter /*|| !this.cavernToSurfaceTimeConverter*/ || !this.gorahyan),
-            'cavernToSurfaceTimeConverter, surfaceToCavernTimeConverter, or gorahyan is not initialized'
-        );
-
+        this._handleUninitializedConstructorArtifact();
         const
             testStart = new Date(),
             {
@@ -87,8 +77,13 @@ export default class DniGorahyan {
 
         return results;
     }
-    private _handleUninitializedConstructor(uninitializedConstructorDetected: boolean, errorMessage: string) {
-        if (uninitializedConstructorDetected) { throw new Error(errorMessage); }
+    private _handleUninitializedConstructorArtifact(jestOverride: boolean = false) {
+        let uninitializedConstructorDetected = (
+            (this.gorahyan === null || this.gorahyan === undefined) ||
+            (typeof this.surfaceToCavernTime !== 'function' || typeof this.cavernToSurfaceTime !== 'function')
+        );
+        if(jestOverride) { return "Catastrophic Failure Caught." }
+        if(uninitializedConstructorDetected) { throw new Error('cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized'); }
     }
     private _calculateElapsedRuntimeOfControlTests(testStart: Date, testEnd: Date) {
         const
@@ -107,6 +102,3 @@ export default class DniGorahyan {
         }
     }
 }
-
-let test = new DniGorahyan();
-test.runControlTests();

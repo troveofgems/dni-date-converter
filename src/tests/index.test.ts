@@ -24,7 +24,7 @@ describe("Interface Test Suite", () => {
         });
         test("cavernToSurfaceTimeConverter() is Defined", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            expect(typeof dniGorahyanInstantiated.cavernToSurfaceTimeConverter).toBe("function");
+            expect(typeof dniGorahyanInstantiated.cavernToSurfaceTime).toBe("function");
         });
         test("runControlTests() is Defined", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
@@ -76,6 +76,20 @@ describe("Interface Test Suite", () => {
         });
     });
 
+    describe("DniGorahyan cavernToSurfaceTimeConverter() Function Calls", () => {
+        test("cavernToSurfaceTimeConverter() Called With D'ni DateTime String Passed", () => {
+            const dniGorahyanInstantiated = new DniGorahyan();
+            const cavernToSurfaceTimeSpy = jest.spyOn(dniGorahyanInstantiated, "cavernToSurfaceTime");
+            const result = dniGorahyanInstantiated.cavernToSurfaceTime("Leefo 1 9647 DE 0:00:00:00");
+
+            // Check the spy if the method was called correctly.
+            expect(cavernToSurfaceTimeSpy).toHaveBeenCalled();
+
+            // Restore the mock and revert original implementation.
+            cavernToSurfaceTimeSpy.mockClear();
+        });
+    });
+
     describe("DniGorahyan runControlTests() Function Call", () => {
         test("runControlTests() Called", () => {
             const
@@ -96,6 +110,24 @@ describe("Interface Test Suite", () => {
 
             // Restore the mock and revert original implementation.
             runControlTestsSpy.mockClear();
+        });
+    });
+
+    describe("DniGorahyan Uninitialized Value Detected", () => {
+        test("Catastrophic Program Error", () => {
+            const dniGorahyanInstantiated = new DniGorahyan();
+
+            const
+               runControlTestSpy = jest.spyOn(dniGorahyanInstantiated, "simulateCatastrophicObjectFailure"),
+               callResults = dniGorahyanInstantiated.simulateCatastrophicObjectFailure();
+
+            expect(callResults).toEqual("Catastrophic Failure Caught.");
+
+            // Check the spy if the method was called correctly.
+            expect(runControlTestSpy).toHaveBeenCalled();
+
+            // Restore the mock and revert original implementation.
+            runControlTestSpy.mockClear();
         });
     });
 });

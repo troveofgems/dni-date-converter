@@ -3,7 +3,7 @@ import DniDateTimeConstants from "../constants/dni.date.constants";
 import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 
 import {attachLeapSecondData} from "./leap.second.lib";
-import SurfaceConverterLib from "./surface.converter.lib";
+import { setSurfaceTimeArtifactsByString } from "./surface.converter.lib";
 
 export default function GorahyanInitLib(DEBUG: boolean = false) {
     const dateTimeOfConvergence = "1991-04-21T09:54:00"; // This is Cavern Local
@@ -107,11 +107,8 @@ export default function GorahyanInitLib(DEBUG: boolean = false) {
 
 export function setConvergenceTimeArtifacts(gorahyan: GorahyanInterface) {
     const
-        surfaceConverter = SurfaceConverterLib(gorahyan),
-        { setSurfaceTimeArtifactsByString } = surfaceConverter,
-        { earthConvergenceDateTimeString } = gorahyan.dniConstants.dates.calendarConvergence
-
-    const elapsedSecondsAtConvergence = setSurfaceTimeArtifactsByString(earthConvergenceDateTimeString);
+        { earthConvergenceDateTimeString } = gorahyan.dniConstants.dates.calendarConvergence,
+        elapsedSecondsAtConvergence = setSurfaceTimeArtifactsByString(earthConvergenceDateTimeString, gorahyan);
 
     gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsAtConvergence =
         Big(elapsedSecondsAtConvergence);

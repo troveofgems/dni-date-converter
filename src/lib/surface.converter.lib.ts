@@ -4,47 +4,48 @@ import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 import DniMonthConstants from "../constants/dni.month.constants";
 
 import Utils from "./utils.lib";
-import {AdjustForLeapSeconds} from "./leap.second.lib";
+import { adjustForLeapSeconds } from "./leap.second.lib";
+
+export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahyan: GorahyanInterface) {
+    const
+        parsedData = surfaceDateTime.split("T"),
+        requestedDate = parsedData[0].split("-"),
+        requestedTime = parsedData[1].split(":");
+
+    let // Convert strings To ints and store them against the class object.
+        year    = parseInt(requestedDate[0]),
+        month   = parseInt(requestedDate[1]),
+        day     = parseInt(requestedDate[2]),
+        hour    = parseInt(requestedTime[0]),
+        minute  = parseInt(requestedTime[1]),
+        second  = parseInt(requestedTime[2]);
+
+    gorahyan.conversionArtifacts.surface.bigs.year = Big(year);
+    gorahyan.conversionArtifacts.surface.bigs.month.id = Big(month);
+    gorahyan.conversionArtifacts.surface.bigs.day = Big(day);
+    gorahyan.conversionArtifacts.surface.bigs.hour = Big(hour);
+    gorahyan.conversionArtifacts.surface.bigs.minute = Big(minute);
+    gorahyan.conversionArtifacts.surface.bigs.second = Big(second);
+
+    gorahyan.conversionArtifacts.surface.readonly.year = year;
+    gorahyan.conversionArtifacts.surface.readonly.month.id = month;
+    gorahyan.conversionArtifacts.surface.readonly.day = day;
+    gorahyan.conversionArtifacts.surface.readonly.hour = hour;
+    gorahyan.conversionArtifacts.surface.readonly.minute = minute;
+    gorahyan.conversionArtifacts.surface.readonly.second = second;
+
+    let dt = new Date(year, month - 1, day);
+    dt.setUTCHours(hour);
+    dt.setUTCMinutes(minute + (7 * 60));
+    dt.setUTCSeconds(second);
+    let temp = Date.parse(dt.toISOString());
+
+    return adjustForLeapSeconds(Big(temp), gorahyan);
+}
 
 export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
     const { safeDateOperation, safeStringOperation, padValue } = Utils();
 
-    const _setSurfaceTimeArtifactsByString = function(surfaceDateTime: string) {
-        const
-            parsedData = surfaceDateTime.split("T"),
-            requestedDate = parsedData[0].split("-"),
-            requestedTime = parsedData[1].split(":");
-
-        let // Convert strings To ints and store them against the class object.
-            year    = parseInt(requestedDate[0]),
-            month   = parseInt(requestedDate[1]),
-            day     = parseInt(requestedDate[2]),
-            hour    = parseInt(requestedTime[0]),
-            minute  = parseInt(requestedTime[1]),
-            second  = parseInt(requestedTime[2]);
-
-        gorahyan.conversionArtifacts.surface.bigs.year = Big(year);
-        gorahyan.conversionArtifacts.surface.bigs.month.id = Big(month);
-        gorahyan.conversionArtifacts.surface.bigs.day = Big(day);
-        gorahyan.conversionArtifacts.surface.bigs.hour = Big(hour);
-        gorahyan.conversionArtifacts.surface.bigs.minute = Big(minute);
-        gorahyan.conversionArtifacts.surface.bigs.second = Big(second);
-
-        gorahyan.conversionArtifacts.surface.readonly.year = year;
-        gorahyan.conversionArtifacts.surface.readonly.month.id = month;
-        gorahyan.conversionArtifacts.surface.readonly.day = day;
-        gorahyan.conversionArtifacts.surface.readonly.hour = hour;
-        gorahyan.conversionArtifacts.surface.readonly.minute = minute;
-        gorahyan.conversionArtifacts.surface.readonly.second = second;
-
-        let dt = new Date(year, month - 1, day);
-        dt.setUTCHours(hour);
-        dt.setUTCMinutes(minute + (7 * 60));
-        dt.setUTCSeconds(second);
-        let temp = Date.parse(dt.toISOString());
-
-        return AdjustForLeapSeconds(Big(temp), gorahyan);
-    }
     const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
         let dt = new Date(surfaceDateTime.getUTCFullYear(), surfaceDateTime.getMonth(), surfaceDateTime.getDate());
         dt.setUTCHours(surfaceDateTime.getHours());
@@ -52,7 +53,7 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         dt.setUTCSeconds(surfaceDateTime.getSeconds());
         let temp = Date.parse(dt.toISOString());
 
-        return AdjustForLeapSeconds(Big(temp), gorahyan);
+        return adjustForLeapSeconds(Big(temp), gorahyan);
     }
     const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined, DEBUG: boolean = false) {
         const {
@@ -66,7 +67,7 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         if(stringPassed) {
             let
                 safeDateTimeString = safeStringOperation(surfaceDateTime),
-                processedDTString = _setSurfaceTimeArtifactsByString(safeDateTimeString);
+                processedDTString = setSurfaceTimeArtifactsByString(safeDateTimeString, gorahyan);
 
             gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate = Big(processedDTString);
             gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsForGivenDate = processedDTString;
@@ -383,8 +384,6 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
     }
 
     return {
-        setSurfaceTimeArtifactsByString: _setSurfaceTimeArtifactsByString,
-        setSurfaceTimeArtifactsByDateObject: _setSurfaceTimeArtifactsByDateObject,
         convertSurfaceTimestampToCavern: _convertSurfaceTimestampToCavern
     }
 }

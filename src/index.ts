@@ -2,69 +2,111 @@ import {GorahyanInterface} from "./interfaces/gorahyan.interface";
 import GorahyanInitLib, { setConvergenceTimeArtifacts } from "./lib/gorahyan.init.lib";
 
 import SurfaceConverterLib from "./lib/surface.converter.lib";
+import CavernConverterLib from "./lib/cavern.converter.lib";
 
 export default class DniGorahyan {
-    gorahyan: GorahyanInterface | null;
-    surfaceToCavernTimeConverter;
-    cavernToSurfaceTimeConverter: null;
+    public gorahyan: GorahyanInterface = setConvergenceTimeArtifacts(GorahyanInitLib()); // Expose Selected Class Internals So Others May Review Calculations/Values As Needed
+    public surfaceToCavernTimeConverter;
+    public cavernToSurfaceTimeConverter;
+    public runControlTests;
 
     constructor() {
-        this.gorahyan = setConvergenceTimeArtifacts(GorahyanInitLib());
-        this.surfaceToCavernTimeConverter = SurfaceConverterLib(this.gorahyan);
-        this.cavernToSurfaceTimeConverter = null;
+        this.surfaceToCavernTimeConverter = this.surfaceToCavernTime; // Sur to Cav - Converter Call
+        this.cavernToSurfaceTimeConverter = this.cavernToSurfaceTime; // Cav to Sur - Converter Call
+        this.runControlTests = this._runControlTests;
     }
 
+    // Public Methods Available: surfaceToCavernTime, cavernToSurfaceTime, runControlTests
     public surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string {
-        return this.surfaceToCavernTimeConverter.convertSurfaceTimestampToCavern(surfaceDateTime);
+        this._handleUninitializedConstructor(
+            (!this.surfaceToCavernTimeConverter || !this.gorahyan),
+            'surfaceToCavernTimeConverter or gorahyan is not initialized'
+        );
+        let
+            converter = SurfaceConverterLib(this.gorahyan),
+            { convertSurfaceTimestampToCavern } = converter;
+        return convertSurfaceTimestampToCavern(surfaceDateTime);
     }
 
-    public cavernToSurfaceTime(cavernDateTime?: Date | string | null | undefined): string {
-        return "Cavern To Surface Time";
+    public cavernToSurfaceTime(cavernDateTimeString: string): {
+
+    } {
+        this._handleUninitializedConstructor(
+            (!this.cavernToSurfaceTimeConverter || !this.gorahyan),
+            'cavernToSurfaceTimeConverter or gorahyan is not initialized'
+        );
+
+        let
+            converter = CavernConverterLib(this.gorahyan),
+            { convertCavernTimestampToSurface } = converter;
+
+        return convertCavernTimestampToSurface(cavernDateTimeString);
     }
 
-    public runControlTests(DEBUG: boolean = true) {
-        const testStart = new Date();
-        const {
-            earthConvergenceDateTimeString
-        } = this.gorahyan!.dniConstants.dates.calendarConvergence
+    // Private Methods
+    private _runControlTests(DEBUG: boolean = true) {
+        this._handleUninitializedConstructor(
+            (!this.surfaceToCavernTimeConverter /*|| !this.cavernToSurfaceTimeConverter*/ || !this.gorahyan),
+            'cavernToSurfaceTimeConverter, surfaceToCavernTimeConverter, or gorahyan is not initialized'
+        );
+
+        const
+            testStart = new Date(),
+            {
+                earthConvergenceDateTimeString
+            } = this.gorahyan!.dniConstants.dates.calendarConvergence;
 
         /**
          * First Test: Using String Value
          * */
-        console.log("Running Controls Test...Debugging: ", DEBUG);
-        console.log("First Test Using DateTime String...", earthConvergenceDateTimeString);
-        let first_test: DniGorahyan | null = new DniGorahyan();
-        console.log("First Test Complete. Result: ", first_test.surfaceToCavernTime(earthConvergenceDateTimeString));
+        let first_test: DniGorahyan | string | null = new DniGorahyan();
+        first_test = first_test.surfaceToCavernTime(earthConvergenceDateTimeString);
 
         /**
          * Second Test: Using DateTime Object Value
          * */
-        console.log("Second Test Using DateTime Object...", new Date(earthConvergenceDateTimeString));
-        let second_test: DniGorahyan | null = new DniGorahyan();
-        console.log("Second Test Complete. Result: ", second_test.surfaceToCavernTime(new Date(earthConvergenceDateTimeString)));
+        let second_test: DniGorahyan | string | null = new DniGorahyan();
+        second_test = second_test.surfaceToCavernTime(new Date(earthConvergenceDateTimeString));
 
         /**
          * Third Test: Not Passing A Value For Conversion
          * */
-        console.log("Third Test Using Undefined/Null...");
-        let third_test: DniGorahyan | null = new DniGorahyan();
-        console.log("Third Test Complete. Result: ", third_test.surfaceToCavernTime());
+        let third_test: DniGorahyan | string | null = new DniGorahyan();
+        third_test = third_test.surfaceToCavernTime();
 
-        // Cleanup Tests
-        first_test  = null;
-        second_test = null;
-        third_test  = null;
+        const runtimeMetrics = this._calculateElapsedRuntimeOfControlTests(testStart, new Date());
 
-        const testEnd = new Date();
-        const elapsedTime = testEnd.getTime() - testStart.getTime();
-        const seconds = Math.floor(elapsedTime / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
+        let results = {
+            runtimeMetrics,
+            generated: {
+                first_test,
+                second_test,
+                third_test
+            }
+        };
 
-        console.log(`Elapsed time to run tests: ${hours} hours, ${minutes} minutes, ${seconds} seconds, ${elapsedTime} milliseconds`);
+        return results;
+    }
+    private _handleUninitializedConstructor(uninitializedConstructorDetected: boolean, errorMessage: string) {
+        if (uninitializedConstructorDetected) { throw new Error(errorMessage); }
+    }
+    private _calculateElapsedRuntimeOfControlTests(testStart: Date, testEnd: Date) {
+        const
+            elapsedTimeInMS = testEnd.getTime() - testStart.getTime(),
+            seconds = Math.floor(elapsedTimeInMS / 1000),
+            minutes = Math.floor(seconds / 60),
+            hours = Math.floor(minutes / 60),
+            elapsedTimeMessage = `Elapsed time to run tests: ${hours} hours, ${minutes} minutes, ${seconds} seconds, ${elapsedTimeInMS} milliseconds`;
+
+        return {
+            elapsedTimeMessage,
+            elapsedTimeInMS,
+            hours,
+            minutes,
+            seconds
+        }
     }
 }
 
-let controlTests: DniGorahyan | null = new DniGorahyan();
-controlTests.runControlTests();
-controlTests = null;
+let test = new DniGorahyan();
+test.runControlTests();

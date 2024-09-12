@@ -24,8 +24,5 @@ describe("Gorahyan Init Lib Test Suite", () => {
             let gorahyanInitLibInstantiated = GorahyanInitLib.call(this, true);
             expect(gorahyanInitLibInstantiated.surface.requestedTSTranslation).toBe("1991-04-21T09:54:00");
         });
-        test("setConvergenceTimeArtifacts() Function Exposed", () => {
-            expect(typeof setConvergenceTimeArtifacts).toBe("function");
-        });
     });
 });

@@ -7,12 +7,16 @@ import CavernConverterLib from "./lib/cavern.converter.lib";
 export default class DniGorahyan {
     public gorahyan: GorahyanInterface = setConvergenceTimeArtifacts(GorahyanInitLib()); // Expose Selected Class Internals So Others May Review Calculations/Values As Needed
     public runControlTests;
+    public test;
 
     constructor() {
         this.runControlTests = this._runControlTests;
+        this.test = {
+            handleUninitializedConstructorArtifact: this._handleUninitializedConstructorArtifact
+        }
     }
 
-    // Public Methods Available: surfaceToCavernTime, cavernToSurfaceTime, runControlTests
+    // Public Methods Available: surfaceToCavernTime, cavernToSurfaceTime, runControlTests, simulateCatastrophicObjectFailure
     public surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string {
         this._handleUninitializedConstructorArtifact();
         let
@@ -31,14 +35,12 @@ export default class DniGorahyan {
         return convertCavernTimestampToSurface(cavernDateTimeString);
     }
 
-    public simulateCatastrophicObjectFailure(jestOverride = true) {
-        // @ts-ignore
-        this.gorahyan = null;
-        return this._handleUninitializedConstructorArtifact(jestOverride);
+    public simulateCatastrophicObjectFailure(): Error | void {
+        return this._handleUninitializedConstructorArtifact(true);
     }
 
     // Private Methods
-    private _runControlTests(DEBUG: boolean = true) {
+    private _runControlTests() {
         this._handleUninitializedConstructorArtifact();
         const
             testStart = new Date(),
@@ -66,7 +68,7 @@ export default class DniGorahyan {
 
         const runtimeMetrics = this._calculateElapsedRuntimeOfControlTests(testStart, new Date());
 
-        let results = {
+        return {
             runtimeMetrics,
             generated: {
                 first_test,
@@ -74,16 +76,16 @@ export default class DniGorahyan {
                 third_test
             }
         };
-
-        return results;
     }
-    private _handleUninitializedConstructorArtifact(jestOverride: boolean = false) {
+    private _handleUninitializedConstructorArtifact(forceError: boolean = false): Error | void {
         let uninitializedConstructorDetected = (
-            (this.gorahyan === null || this.gorahyan === undefined) ||
-            (typeof this.surfaceToCavernTime !== 'function' || typeof this.cavernToSurfaceTime !== 'function')
+            forceError ||
+            (this?.gorahyan === null || this?.gorahyan === undefined) ||
+            (typeof this?.surfaceToCavernTime !== 'function' || typeof this?.cavernToSurfaceTime !== 'function')
         );
-        if(jestOverride) { return "Catastrophic Failure Caught." }
-        if(uninitializedConstructorDetected) { throw new Error('cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized'); }
+        if(uninitializedConstructorDetected) {
+            throw new Error('cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized');
+        }
     }
     private _calculateElapsedRuntimeOfControlTests(testStart: Date, testEnd: Date) {
         const

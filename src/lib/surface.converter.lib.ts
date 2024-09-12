@@ -71,16 +71,16 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
 
             gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate = Big(processedDTString);
             gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsForGivenDate = processedDTString;
-        } else if (dateObjectPassed) {
+        } else if (dateObjectPassed && !nullOrUndefinedPassed) {
             let
                 safeDateTimeObject = safeDateOperation(surfaceDateTime),
                 processedDTObject = _setSurfaceTimeArtifactsByDateObject(safeDateTimeObject);
 
             gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate = Big(processedDTObject);
             gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsForGivenDate = processedDTObject;
-        } else if (nullOrUndefinedPassed) {
+        } else if(nullOrUndefinedPassed) {
             let
-                dateToProcess = DEBUG ? new Date(cavernConvergenceDate) : new Date(),
+                dateToProcess = DEBUG ? new Date(Date.UTC(1991, 4 - 1, 21, 16, 54, 0)) : new Date(),
                 processedDTObject = _setSurfaceTimeArtifactsByDateObject(dateToProcess);
 
             gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate = Big(processedDTObject);
@@ -260,11 +260,9 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         target: string,
         max: number, min: number, adjustByValue: number
     ) {
-        // @ts-ignore
         const cavernBigs = gorahyan.conversionArtifacts.cavern.bigs;
         const cavernReadonly = gorahyan.conversionArtifacts.cavern.readonly;
 
-        // @ts-ignore
         while ((
                 (target === "vailee" && gorahyan.conversionArtifacts.cavern.bigs[target].id.toNumber() > max) ||
                 (target === "vailee" && gorahyan.conversionArtifacts.cavern.bigs[target].id.toNumber() < min)
@@ -274,22 +272,30 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
                 // @ts-ignore
                 target !== "vailee" && gorahyan.conversionArtifacts.cavern.bigs[target].toNumber() < min
             )) {
-            let currentValue = (target === "vailee") ?
+            let currentValue: number = (target === "vailee") ?
                     gorahyan.conversionArtifacts.cavern.bigs[target].id.toNumber() :
                     // @ts-ignore
                     gorahyan.conversionArtifacts.cavern.bigs[target].toNumber(),
                 adjustedValue = 0;
 
+
             if (currentValue > max) {
-                adjustedValue = currentValue - adjustByValue;
-            } else {
-                adjustedValue = currentValue + adjustByValue;
+                adjustedValue = -adjustByValue;
+            } else if (currentValue < min) {
+                adjustedValue = adjustByValue;
             }
 
-            // @ts-ignore
-            cavernBigs[target] = cavernBigs[target].plus(adjustedValue);
-            // @ts-ignore
-            cavernReadonly[target] = cavernBigs[target].toNumber();
+            if(target === "vailee") {
+                // @ts-ignore
+                cavernBigs[target].id = cavernBigs[target].id.plus(adjustedValue);
+                // @ts-ignore
+                cavernReadonly[target].id = cavernBigs[target].id.toNumber();
+            } else {
+                // @ts-ignore
+                cavernBigs[target] = cavernBigs[target].plus(adjustedValue);
+                // @ts-ignore
+                cavernReadonly[target] = cavernBigs[target].toNumber();
+            }
 
             // Sub-processing when a main component is adjusted
             switch(target) {
@@ -311,11 +317,8 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
                 case "vailee":
                     _subAdjustment("hahr", currentValue, min, max);
                     break;
-                default:
-                    break;
             }
         }
-
     }
     const finalCalendarAdjustments = function() {
         const {
@@ -376,14 +379,22 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
 
     const _mapVaileeName = function(vaileeId: number) {
         try {
-            _setVaileeArtifacts(DniMonthConstants[vaileeId].vaileeNameText, DniMonthConstants[vaileeId].dniFontVaileeNameText);
+            let
+                text = DniMonthConstants[vaileeId].vaileeNameText,
+                dniFontMappingText = DniMonthConstants[vaileeId].dniFontVaileeNameText;
+            _setVaileeArtifacts(text, dniFontMappingText);
         } catch(err) {
-            console.error(err);
             throw new Error("Vailee Parse Failed. Unable To Continue Date Conversion. Check the error console for more details.");
         }
     }
 
     return {
-        convertSurfaceTimestampToCavern: _convertSurfaceTimestampToCavern
+        convertSurfaceTimestampToCavern: _convertSurfaceTimestampToCavern,
+        tests: {
+            mapVaileeName: _mapVaileeName,
+            getDniConvertedTimestamp: _getDniConvertedTimestamp,
+            adjustTimeValue: adjustTimeValue,
+            subAdjustment: _subAdjustment
+        }
     }
 }

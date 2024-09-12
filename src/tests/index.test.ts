@@ -90,8 +90,8 @@ describe("Interface Test Suite", () => {
         });
     });
 
-    describe("DniGorahyan runControlTests() Function Call", () => {
-        test("runControlTests() Called", () => {
+    describe("DniGorahyan runControlTests() Function Calls", () => {
+        test("runControlTests(false) Called", () => {
             const
                 dniGorahyanInstantiated = new DniGorahyan(),
                 runControlTestsSpy = jest.spyOn(dniGorahyanInstantiated, "runControlTests"),
@@ -115,19 +115,44 @@ describe("Interface Test Suite", () => {
 
     describe("DniGorahyan Uninitialized Value Detected", () => {
         test("Catastrophic Program Error", () => {
+            jest.mock('../index', () => ({
+                ...jest.requireActual('../index'),
+                gorahyan: null,
+                surfaceToCavernTime: () => "mockFunction",
+                cavernToSurfaceTime: () => "mockFunction"
+            }));
+
             const dniGorahyanInstantiated = new DniGorahyan();
 
+            // Spy on the instance method
+            const simulateCatastrophicObjectFailureSpy = jest.spyOn(dniGorahyanInstantiated, "simulateCatastrophicObjectFailure");
+
+            expect(simulateCatastrophicObjectFailureSpy).toThrow();
+
+            // Check if the spy was called
+            expect(simulateCatastrophicObjectFailureSpy).toHaveBeenCalled();
+
+            // Restore the mock and revert original implementation
+            simulateCatastrophicObjectFailureSpy.mockClear();
+        });
+        test("From Attached Test Object", () => {
             const
-               runControlTestSpy = jest.spyOn(dniGorahyanInstantiated, "simulateCatastrophicObjectFailure"),
-               callResults = dniGorahyanInstantiated.simulateCatastrophicObjectFailure();
+                dniGorahyanInstantiated = new DniGorahyan(),
+                { test } = dniGorahyanInstantiated;
 
-            expect(callResults).toEqual("Catastrophic Failure Caught.");
+            // @ts-ignore
+            dniGorahyanInstantiated.gorahyan = null;
 
-            // Check the spy if the method was called correctly.
-            expect(runControlTestSpy).toHaveBeenCalled();
+            // Spy on the instance method
+            const simulateCatastrophicObjectFailureSpy = jest.spyOn(test, "handleUninitializedConstructorArtifact");
 
-            // Restore the mock and revert original implementation.
-            runControlTestSpy.mockClear();
+            expect(simulateCatastrophicObjectFailureSpy).toThrow("cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized");
+
+            // Check if the spy was called
+            expect(simulateCatastrophicObjectFailureSpy).toHaveBeenCalled();
+
+            // Restore the mock and revert original implementation
+            simulateCatastrophicObjectFailureSpy.mockClear();
         });
     });
 });

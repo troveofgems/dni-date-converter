@@ -1,28 +1,17 @@
 export default function UtilsLib() {
     const _safeStringOperation = function<T>(input: T): string {
-        let result: string = "";
-        try {
-            if (typeof input === 'string') {
-                result = input;
-            }
-        } catch (error: any) {
-            console.error('Error processing date string:', error);
-            throw new Error(error);
+        if(typeof input === 'string') {
+            return input;
+        } else {
+            throw new Error("String Value is Required");
         }
-        return result;
     }
     const _safeDateOperation = function<T>(input: T): Date {
-        let result!: Date;
-        try {
-            if (input instanceof Date) {
-                result = new Date(input);
-            } else {
-                result = new Date();
-            }
-        } catch (error) {
-            console.error('Error processing date object:', error);
+        if (input instanceof Date) {
+            return new Date(input);
+        } else {
+            throw new Error(`Error processing date object:`);
         }
-        return result;
     }
     const _padValue = function(val: number) {
         let s = String(val);

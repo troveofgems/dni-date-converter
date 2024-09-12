@@ -41,7 +41,6 @@ export default function GorahyanInitLib(DEBUG: boolean = false) {
                         tahvoShiftedDelta: Big(0),
                         goranShiftedDelta: Big(0)
                     }
-
                 },
                 readonly: {
                     hahr: 0,

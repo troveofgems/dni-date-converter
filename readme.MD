@@ -28,6 +28,8 @@ Once the DniGorahyan Class has been initialized, the following methods are avail
 
 ## Contributing
 Updates will not be accepted without proper test files.
+Updates will also not be accepted if there have been changes made to the following file:<br/>
+`src/archive/original.source.code.js`. See the [About Section](#about) for more information.
 
 1. Fork the repository.
 2. Create a new branch: `git checkout -b feature-name`
@@ -209,6 +211,19 @@ Ran all test suites.
 
 ## More Resources
 
+Check out work done by others regarding D'ni Timekeeping!
+1. [D'ni Time Converter Program](https://www.guildofarchivists.org/utilities/dateconverter/) by @alahmnat (On Twitter). Based on work by RIUM+, Jehon the Scribe, and rokama. Additional contributions by Brett Middleton on the Guild of Archivists.
+2. [25-Hour Digital Myst Clock/Chronometer](https://www.riumplus.com/25-hour-digital-myst-dni-clock-chronometer/) by Real Of Rium+
+3. [General D'ni Time Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time) by the Guild of Archivists
+4. [D'ni Time Conversion Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time_conversion)
+
+# About
+The first item in the [More Resources](#more-resources) Section is the inspiration for this npm package. I would not have been able
+to create this package without the efforts of those who came before me. I have stored their
+original work in the following location of this software package: `src/archive/original.source.code.js` for posterity's sake and
+to preserve their original work and my source.
+
+The code has been updated and implemented using Node and TypeScript.
 
 ## License
-This project is licensed under the [MIT License](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)
+This project is licensed under the [MIT License](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository) on 

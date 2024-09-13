@@ -68,3 +68,25 @@ export function adjustForLeapSeconds(timestampInMS: Big, gorahyan: GorahyanInter
 
     return adjustedTimestamp.toNumber();
 }
+
+export function deAdjustForLeapSeconds(timestampInMS: Big, gorahyan: GorahyanInterface) {
+    // adjust a JavaScript timestamp for leap seconds
+    const { leapSecondListEpoch, leapSecondOffset } = gorahyan._leapSeconds;
+
+    let leapSecs = 0;
+    let arrayLen = leapSecondListEpoch.length;
+
+    const timestamp = timestampInMS.toNumber();
+
+    for(let i = 0; i < arrayLen && timestamp >= leapSecondListEpoch[i]; i++) {
+        leapSecs++;
+    }
+
+    if(leapSecs > 0) leapSecs += leapSecondOffset - 1;
+
+    let
+        adjustBy = Big(leapSecs).times(1000),
+        adjustedTimestamp = timestampInMS.minus(adjustBy);
+
+    return adjustedTimestamp.toNumber();
+}

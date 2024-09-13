@@ -21,7 +21,7 @@ describe("Test Suite For Surface Converter Library", () => {
             dniGorahyan = new DniGorahyan(),
             surfaceConverterLib = SurfaceConverterLib(dniGorahyan.gorahyan);
 
-        test("safeDateOperation() Function Exposed", () => {
+        test("convertSurfaceTimestampToCavern() Function Exposed", () => {
             expect(typeof surfaceConverterLib.convertSurfaceTimestampToCavern).toBe("function");
         });
     });

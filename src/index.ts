@@ -66,6 +66,24 @@ export default class DniGorahyan {
         let third_test: DniGorahyan | string | null = new DniGorahyan();
         third_test = third_test.surfaceToCavernTime();
 
+        /**
+         * Fourth Test: Cavern String Test 1 - "Leefo 1 9647 DE 0:00:00:00"
+         * */
+        let fourth_test: DniGorahyan | string | null = new DniGorahyan();
+        let fourth_test_results = fourth_test.cavernToSurfaceTime("Leefo 1 9647 DE 0:00:00:00");
+
+        /**
+         * Fifth Test: Cavern String Test 2 - "Leevofo 8 9798 DE 2:13:00:00"
+         * */
+        let fifth_test: DniGorahyan | string | null = new DniGorahyan();
+        let fifth_test_results = fifth_test.cavernToSurfaceTime("Leevofo 8 9798 DE 2:13:00:00");
+
+        /**
+         * Sixth Test: Cavern String Test 3 - "Leevosahn 5 9000 BE 1:05:06:07"
+         * */
+        let sixth_test: DniGorahyan | string | null = new DniGorahyan();
+        let sixth_test_results = fifth_test.cavernToSurfaceTime("Leevosahn 5 9000 BE 1:05:06:07");
+
         const runtimeMetrics = this._calculateElapsedRuntimeOfControlTests(testStart, new Date());
 
         return {
@@ -73,7 +91,10 @@ export default class DniGorahyan {
             generated: {
                 first_test,
                 second_test,
-                third_test
+                third_test,
+                fourth_test_results,
+                fifth_test_results,
+                sixth_test_results
             }
         };
     }

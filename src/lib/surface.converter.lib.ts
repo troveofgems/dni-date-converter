@@ -56,9 +56,6 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         return adjustForLeapSeconds(Big(temp), gorahyan);
     }
     const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined, DEBUG: boolean = false) {
-        const {
-            convergence: cavernConvergenceDate
-        } = gorahyan.dniConstants.dates.cavern;
         let // Process And Store Surface Time Artifacts
             stringPassed = typeof surfaceDateTime === "string",
             dateObjectPassed = typeof surfaceDateTime === "object",

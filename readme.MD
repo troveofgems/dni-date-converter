@@ -1,5 +1,8 @@
 # D'ni Cavern And Surface Time Converters
-This package 
+This package facilitates the conversion of javascript date time objects or strings to D'ni formatted date-time strings
+and D'ni date time strings to javascript date time objects.<br/><br/>
+
+[Wikipedia - Myst & The D'ni](https://en.wikipedia.org/wiki/Myst_(series)#Plot)
 
 ## Table of Contents
 - [Installation](#installation)
@@ -12,8 +15,9 @@ This package
 - [License](#license)
 
 ## Installation
-This Node.js module is available through the npm registry.
-Before installing, download and install Node.js. Node.js 20 or higher is required.
+This package is available through the npm registry.
+Before installing, download and install Node.js. 
+Node.js 20 or higher is required.
 If this is a new project, make sure to create a package.json first with the npm init command.
 
 Installation is done using the npm install command:<br/>
@@ -35,15 +39,16 @@ import DniGorahyan from 'dni-cavern-time';
 
 let 
     dniTimeConverter = new DniGorahyan(),
+    { convertSurfaceTimestampToCavern } = dniTimeConverter,
     surfaceTimestampToConvertToDniDT = "1991-04-21T09:54:00"; // Dn'i Date Time Calendar Convergence, Provided time should be local.
 
 const 
-    usingString = dniTimeConverter.convertSurfaceTimestampToCavern(surfaceTimestampToConvertToDniDT),
-    usingDate = dniTimeConverter.convertSurfaceTimestampToCavern(new Date(surfaceTimestampToConvertToDniDT)),
-    usingCallWithNoParams = dniTimeConverter.convertSurfaceTimestampToCavern();
+    usingString = convertSurfaceTimestampToCavern(surfaceTimestampToConvertToDniDT),
+    usingDate = convertSurfaceTimestampToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingCallWithNoParams = convertSurfaceTimestampToCavern();
 
-console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:000
-console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:000
+console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
+console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
 ```
 
@@ -54,9 +59,10 @@ import DniGorahyan from 'dni-cavern-time';
 
 let 
     dniTimeConverter = new DniGorahyan(),
-    dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:000";
+    { convertCavernTimestampToSurface } = dniTimeConverter,
+    dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:00";
 
-const convertedTS = dniTimeConverter.convertCavernTimestampToSurface(dniTimestampToConvertToSurfaceDT);
+const convertedTS = convertCavernTimestampToSurface(dniTimestampToConvertToSurfaceDT);
 
 console.log(convertedTS);
 ```
@@ -97,7 +103,7 @@ dniTimeConverter.simulateCatastrophicObjectFailure();
         - first_test: surfaceToCavernTime() => Date defaults to new Date(), Returns formatted to D'ni DateTime, 
         - second_test: surfaceToCavernTime(`'1991-04-21T09:54:00'`) => Returns string formatted to D'ni DateTime,
         - third_test: surfaceToCavernTime(`new Date('1991-04-21T09:54:00')`) => Returns string formatted to D'ni DateTime,
-        - fourth_test: cavernToSurfaceTime(`'Leefo 1 9647 DE 0:00:00:000'`) => Returns object with UTC, Cavern, and Local DateTimes
+        - fourth_test: cavernToSurfaceTime(`'Leefo 1 9647 DE 0:00:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
 in earth notation.
         
 Example - Run Control Tests:

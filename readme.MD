@@ -1,5 +1,5 @@
 # D'ni Cavern And Surface Time Converters
-Short Description
+This package 
 
 ## Table of Contents
 - [Installation](#installation)
@@ -7,29 +7,117 @@ Short Description
 - [Contributing](#contributing)
 - [Jest Test Suites](#jest-test-suites)
 - [More Resources](#more-resources)
+- [About](#about)
+- [Contact and Issues](#contact-and-bug-reporting)
 - [License](#license)
 
 ## Installation
-1. Navigate to the NPM Repository
-2. Install package
+This Node.js module is available through the npm registry.
+Before installing, download and install Node.js. Node.js 20 or higher is required.
+If this is a new project, make sure to create a package.json first with the npm init command.
+
+Installation is done using the npm install command:<br/>
+`$ npm install dni-cavern-time`
 
 ## Usage
 The D'ni Cavern Time Converter Package exports a class called DniGorahyan. 
 
-Once the DniGorahyan Class has been initialized, the following methods are available to run:
+Once the DniGorahyan Class has been initialized in the file of your choice, the following methods become available to 
+run:
 1. surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string
-   - This
+   - This function
+      - Accepts: <pre>new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
+      - Returns: string - Dn'i Datetime Formatted <pre>Leetar 29 9680 DE 4:11:16:08</pre>
+
+Example - surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined):
+```js
+import DniGorahyan from 'dni-cavern-time';
+
+let 
+    dniTimeConverter = new DniGorahyan(),
+    surfaceTimestampToConvertToDniDT = "1991-04-21T09:54:00"; // Dn'i Date Time Calendar Convergence, Provided time should be local.
+
+const 
+    usingString = dniTimeConverter.convertSurfaceTimestampToCavern(surfaceTimestampToConvertToDniDT),
+    usingDate = dniTimeConverter.convertSurfaceTimestampToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingCallWithNoParams = dniTimeConverter.convertSurfaceTimestampToCavern();
+
+console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:000
+console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:000
+console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
+```
+
 2. cavernToSurfaceTime(cavernDateTimeString: string): {}
     - This
-3. simulateCatastrophicObjectFailure(): Thrown Error
-    - This
+```js
+import DniGorahyan from 'dni-cavern-time';
+
+let 
+    dniTimeConverter = new DniGorahyan(),
+    dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:000";
+
+const convertedTS = dniTimeConverter.convertCavernTimestampToSurface(dniTimestampToConvertToSurfaceDT);
+
+console.log(convertedTS);
+```
+3. simulateCatastrophicObjectFailure(): <Unknown>Thrown Error
+    - This function:
+      - Accepts: No Parameters
+      - Returns: Thrown Error 
+      ``` 
+      Error: cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized
+        at DniGorahyan._handleUninitializedConstructorArtifact
+      ```
+        - Purpose:
+            - To test the error handling when any of the DniGorahyan properties or methods are somehow overwritten.
+              
+Example - Simulate Catastrophic Failure:
+```js
+import DniGorahyan from 'dni-cavern-time';
+
+let dniTimeConverter = new DniGorahyan();
+
+dniTimeConverter.simulateCatastrophicObjectFailure();
+```
 4. runControlTests(): {}
-    - This
+    - This function:
+      - Accepts: No Parameters
+      - Returns: Object <pre>{
+    runtimeMetrics,
+    generated: {
+      first_test: string,
+      second_test: string,
+      third_test: string,
+      fourth_test: { utc: string, cavern: string, local: string }
+    }
+}</pre>
+      - Purpose: 
+        - To Execute Associated DniGorahyan Functions And Confirm Return Values of Known Date Conversions. 
+      - Functions Executed:
+        - first_test: surfaceToCavernTime() => Date defaults to new Date(), Returns formatted to D'ni DateTime, 
+        - second_test: surfaceToCavernTime(`'1991-04-21T09:54:00'`) => Returns string formatted to D'ni DateTime,
+        - third_test: surfaceToCavernTime(`new Date('1991-04-21T09:54:00')`) => Returns string formatted to D'ni DateTime,
+        - fourth_test: cavernToSurfaceTime(`'Leefo 1 9647 DE 0:00:00:000'`) => Returns object with UTC, Cavern, and Local DateTimes
+in earth notation.
+        
+Example - Run Control Tests:
+```js
+import DniGorahyan from 'dni-cavern-time';
+
+let dniTimeConverter = new DniGorahyan();
+
+console.log(dniTimeConverter.runControlTests());
+```
 
 ## Contributing
-Updates will not be accepted without proper test files.
-Updates will also not be accepted if there have been changes made to the following file:<br/>
-`src/archive/original.source.code.js`. See the [About Section](#about) for more information.
+Contributions will not be accepted under the following conditions:
+- Work without jest test files written for the contribution,<br/>
+- If there have been changes made to the following file: `src/archive/original.source.code.js`
+<br/><br/>
+See the [About Section](#about) for more information.
+
+Otherwise, if proper test files have been written and no changes have been made to the original source code file,
+you may share your contributions, to do so:
 
 1. Fork the repository.
 2. Create a new branch: `git checkout -b feature-name`
@@ -46,7 +134,7 @@ All tests are found at the following directory structure and this is where all t
 The naming convention for test files should follow the format:<br/>
 `src/test/<dot-notation-filename>.test.ts`
 
-1. To run the package tests: `npm run test`
+1. The following command will run the package tests: `npm run test`
 
 Expected Output: 
 <pre>
@@ -210,20 +298,27 @@ Ran all test suites.
 </pre>
 
 ## More Resources
-
 Check out work done by others regarding D'ni Timekeeping!
-1. [D'ni Time Converter Program](https://www.guildofarchivists.org/utilities/dateconverter/) by @alahmnat (On Twitter). Based on work by RIUM+, Jehon the Scribe, and rokama. Additional contributions by Brett Middleton on the Guild of Archivists.
-2. [25-Hour Digital Myst Clock/Chronometer](https://www.riumplus.com/25-hour-digital-myst-dni-clock-chronometer/) by Real Of Rium+
+1. [D'ni Time Converter Program](https://www.guildofarchivists.org/utilities/dateconverter/) by @alahmnat (On Twitter). 
+Based on work by RIUM+, Jehon the Scribe, and rokama. Additional contributions by Brett Middleton on 
+the Guild of Archivists.
+2. [25-Hour Digital Myst Clock/Chronometer](https://www.riumplus.com/25-hour-digital-myst-dni-clock-chronometer/) 
+by Real Of Rium+
 3. [General D'ni Time Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time) by the Guild of Archivists
 4. [D'ni Time Conversion Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time_conversion)
 
-# About
-The first item in the [More Resources](#more-resources) Section is the inspiration for this npm package. I would not have been able
-to create this package without the efforts of those who came before me. I have stored their
-original work in the following location of this software package: `src/archive/original.source.code.js` for posterity's sake and
+## About
+The first item in the [More Resources](#more-resources) Section is the inspiration for this npm package. I would not 
+have been able to create this package without the efforts of those who came before me. I have stored their original 
+work in the following location of this software package: `src/archive/original.source.code.js` for posterity's sake and
 to preserve their original work and my source.
 
 The code has been updated and implemented using Node and TypeScript.
 
+## Contact And Bug Reporting
+You can reach me at dkgreco@thetroveofgems.tech
+
+To report a Bug, please create an issue [here](https://github.com/troveofgems/dni-date-converter/issues/new).
+
 ## License
-This project is licensed under the [MIT License](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository) on 
+This project is licensed under the [MIT License](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository).

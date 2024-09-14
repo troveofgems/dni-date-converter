@@ -38,6 +38,9 @@
     "type": "git",
     "url": "git@github.com:troveofgems/dni-date-converter.git"
   },
+  "publishConfig": {
+    "registry": "https://www.npmjs.com/package/dni-cavern-time"
+  },
   "bugs": {
     "url": "https://github.com/troveofgems/dni-date-converter/issues",
     "email": "dkgreco@thetroveofgems.tech"

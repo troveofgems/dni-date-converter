@@ -33,36 +33,36 @@ run:
       - Accepts: <pre>new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
       - Returns: string - Dn'i Datetime Formatted <pre>Leetar 29 9680 DE 4:11:16:08</pre>
 
-Example - surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined):
+Example - surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
 ```js
 import DniGorahyan from 'dni-cavern-time';
 
 let 
     dniTimeConverter = new DniGorahyan(),
-    { convertSurfaceTimestampToCavern } = dniTimeConverter,
+    { surfaceToCavern } = dniTimeConverter,
     surfaceTimestampToConvertToDniDT = "1991-04-21T09:54:00"; // Dn'i Date Time Calendar Convergence, Provided time should be local.
 
 const 
-    usingString = convertSurfaceTimestampToCavern(surfaceTimestampToConvertToDniDT),
-    usingDate = convertSurfaceTimestampToCavern(new Date(surfaceTimestampToConvertToDniDT)),
-    usingCallWithNoParams = convertSurfaceTimestampToCavern();
+    usingString = surfaceToCavern(surfaceTimestampToConvertToDniDT),
+    usingDate = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingCallWithNoParams = surfaceToCavern();
 
 console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
 ```
 
-2. cavernToSurfaceTime(cavernDateTimeString: string): {}
+2. cavernToSurface(cavernDateTimeString: string): {}
     - This
 ```js
 import DniGorahyan from 'dni-cavern-time';
 
 let 
     dniTimeConverter = new DniGorahyan(),
-    { convertCavernTimestampToSurface } = dniTimeConverter,
+    { cavernToSurface } = dniTimeConverter,
     dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:00";
 
-const convertedTS = convertCavernTimestampToSurface(dniTimestampToConvertToSurfaceDT);
+const convertedTS = cavernToSurface(dniTimestampToConvertToSurfaceDT);
 
 console.log(convertedTS);
 ```

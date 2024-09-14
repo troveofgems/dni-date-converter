@@ -1,12 +1,20 @@
 {
   "name": "dni-cavern-time",
   "version": "1.0.0",
-  "description": "",
+  "homepage": "https://github.com/troveofgems/dni-date-converter#readme",
+  "description": "D'ni Date-Time Converter Package",
+  "keywords": [
+    "Dni Time",
+    "Myst Dni Time",
+    "D'ni Time",
+    "D'ni"
+  ],
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && cp LICENSE dist && cp README.md dist && cp package.json dist ",
     "dev": "ts-node src/index.ts",
-    "test": "jest"
+    "test": "jest --config jest.config.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -25,5 +33,15 @@
   "private": true,
   "dependencies": {
     "big.js": "^6.2.1"
-  }
+  },
+  "author": "Dustin K Greco <dkgreco@thetroveofgems.tech> (https://www.troveofgems.tech/)",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:troveofgems/dni-date-converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/troveofgems/dni-date-converter/issues",
+    "email": "dkgreco@thetroveofgems.tech"
+  },
+  "license": "MIT"
 }

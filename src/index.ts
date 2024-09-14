@@ -7,9 +7,13 @@ import CavernConverterLib from "./lib/cavern.converter.lib";
 export default class DniGorahyan {
     public gorahyan: GorahyanInterface = setConvergenceTimeArtifacts(GorahyanInitLib()); // Expose Selected Class Internals So Others May Review Calculations/Values As Needed
     public runControlTests;
+    public surfaceToCavern;
+    public cavernToSurface;
     public test;
 
     constructor() {
+        this.surfaceToCavern = this.surfaceToCavernTime;
+        this.cavernToSurface = this.cavernToSurfaceTime;
         this.runControlTests = this._runControlTests;
         this.test = {
             handleUninitializedConstructorArtifact: this._handleUninitializedConstructorArtifact

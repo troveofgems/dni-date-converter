@@ -9,7 +9,6 @@ export function _getVaileeId(vaileeName: string): number {
     let id: number;
     try {
         let dniMonthData = DniMonthConstants.filter((item) => item.vaileeNameText === vaileeName);
-        console.log(dniMonthData);
         id = dniMonthData[0].id;
     } catch(err) {
         throw new Error("Error processing vailee name.");

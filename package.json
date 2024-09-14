@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc && cp LICENSE dist && cp README.md dist && cp package.json dist ",
     "dev": "ts-node src/index.ts",
     "test": "jest"
   },

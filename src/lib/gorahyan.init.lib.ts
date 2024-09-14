@@ -6,7 +6,6 @@ import {attachLeapSecondData} from "./leap.second.lib";
 import { setSurfaceTimeArtifactsByString } from "./surface.converter.lib";
 
 export default function GorahyanInitLib(DEBUG: boolean = false) {
-    const dateTimeOfConvergence = "1991-04-21T09:54:00"; // This is Cavern Local
     return  {
         _leapSeconds: attachLeapSecondData(),
         dniConstants: DniDateTimeConstants(),
@@ -14,8 +13,7 @@ export default function GorahyanInitLib(DEBUG: boolean = false) {
             convertedTimestamp: ""
         },
         surface: {
-            currentTS: new Date(),
-            requestedTSTranslation: DEBUG ? dateTimeOfConvergence : null,
+            currentTS: new Date()
         },
         conversionArtifacts: {
             cavern: {

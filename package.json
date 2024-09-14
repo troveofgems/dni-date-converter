@@ -36,7 +36,7 @@
   "author": "Dustin K Greco <dkgreco@thetroveofgems.tech> (https://www.thetroveofgems.tech/)",
   "repository": {
     "type": "git",
-    "url": "git@github.com:troveofgems/dni-date-converter.git"
+    "url": "https://github.com/troveofgems/dni-date-converter"
   },
   "publishConfig": {
     "registry": "https://www.npmjs.com/package/dni-cavern-time"

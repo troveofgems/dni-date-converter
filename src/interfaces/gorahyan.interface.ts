@@ -9,7 +9,6 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
     },
     surface: {
         currentTS: Date;
-        requestedTSTranslation: string | null;
     }
     conversionArtifacts: {
         cavern: {

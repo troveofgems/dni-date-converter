@@ -4,10 +4,19 @@
   "homepage": "https://github.com/troveofgems/dni-date-converter#readme",
   "description": "D'ni Date-Time Converter Package",
   "keywords": [
-    "Dni Time",
-    "Myst Dni Time",
-    "D'ni Time",
-    "D'ni"
+    "dni time",
+    "myst dni time",
+    "d'ni time",
+    "d'ni",
+    "dni time manipulation",
+    "time manipulation",
+    "dni date handling",
+    "dni cavern time conversion",
+    "game development",
+    "npm package",
+    "javascript",
+    "typescript",
+    "node"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,9 +46,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troveofgems/dni-date-converter.git"
-  },
-  "publishConfig": {
-    "registry": "https://www.npmjs.com/package/dni-cavern-time"
   },
   "bugs": {
     "url": "https://github.com/troveofgems/dni-date-converter/issues",

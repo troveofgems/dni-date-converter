@@ -1,21 +1,34 @@
 import {describe, expect, test} from "@jest/globals";
 
-import GorahyanInitLib, { setConvergenceTimeArtifacts } from "../lib/gorahyan.init.lib";
+import {init, testForFailedInit} from "../lib/gorahyan.init.lib";
+import {DniGorahyan} from "../index";
 
-describe("Gorahyan Init Lib Test Suite", () => {
+describe("Gorahyan Init Library Test Suite", () => {
     describe("Library Loaded", () => {
         test("Library Loaded{} Instantiated", () => {
-            const gorahyanInitLibInstantiated = GorahyanInitLib();
-            expect(gorahyanInitLibInstantiated).not.toBe(null);
+            let gorahyanInstantiated: DniGorahyan | Error | null = init(new DniGorahyan());
+            expect(gorahyanInstantiated).not.toBe(null);
+            gorahyanInstantiated = null;
         });
     });
 
-    describe("Functions Exposed", () => {
-        test("GorahyanInitLib() Function Exposed", () => {
-            expect(typeof GorahyanInitLib).toBe("function");
+    describe("Converters Exposed", () => {
+        test("surfaceToCavern() Function Exposed", () => {
+            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            expect(typeof gorahyanInstantiated.converters.surfaceToCavern).toBe("function");
+            gorahyanInstantiated = null;
         });
-        test("setConvergenceTimeArtifacts() Function Exposed", () => {
-            expect(typeof setConvergenceTimeArtifacts).toBe("function");
+        test("cavernToSurface() Function Exposed", () => {
+            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            expect(typeof gorahyanInstantiated.converters.cavernToSurface).toBe("function");
+            gorahyanInstantiated = null;
+        });
+    });
+
+    describe("Thrown Error Rendered", () => {
+        test("Test throw new Error()", () => {
+            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            expect(() => testForFailedInit(gorahyanInstantiated, true)).toThrow("Class Init Failed. Unable to set methods or properties");
         });
     });
 });

@@ -6,6 +6,17 @@ import DniMonthConstants from "../constants/dni.month.constants";
 import Utils from "./utils.lib";
 import { adjustForLeapSeconds } from "./leap.second.lib";
 
+/**
+ * Default File Export
+ * */
+export default function convertSurfaceTimestampToDniCavernTimestamp(gorahyan: GorahyanInterface) {
+    const { convertSurfaceTimestampToCavern } = SurfaceConverterLib(gorahyan);
+    return convertSurfaceTimestampToCavern;
+}
+
+/**
+ * Helper Exports
+ * */
 export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahyan: GorahyanInterface) {
     const
         parsedData = surfaceDateTime.split("T"),
@@ -43,7 +54,10 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahya
     return adjustForLeapSeconds(Big(temp), gorahyan);
 }
 
-export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
+/**
+ * Internal File Methods
+ * */
+export function SurfaceConverterLib(gorahyan: GorahyanInterface) {
     const { safeDateOperation, safeStringOperation, padValue } = Utils();
 
     const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
@@ -77,7 +91,7 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
             gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsForGivenDate = processedDTObject;
         } else if(nullOrUndefinedPassed) {
             let
-                dateToProcess = DEBUG ? new Date(Date.UTC(1991, 4 - 1, 21, 16, 54, 0)) : new Date(),
+                dateToProcess = new Date(),
                 processedDTObject = _setSurfaceTimeArtifactsByDateObject(dateToProcess);
 
             gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsForGivenDate = Big(processedDTObject);
@@ -96,7 +110,7 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
                 prorahnteePerHahr, // Number of Prorahntee in 1 Hahr
                 deltas: {
                     hahrShift, vaileeShift, yahrShift,
-                    gartahvoShift, tahvoShift, goranShift
+                    gartahvoShift, tahvoShift, gorahnShift
                 }
             }
         } = gorahyan.dniConstants;
@@ -175,14 +189,14 @@ export default function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         /**
         * Calculate and Store the Gorahn
         * */
-        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(goranShift);
+        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(gorahnShift);
         gorahn = Math.floor(gorahn.toNumber());
 
-        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, goranShift, prorahnteeDeltaWithTahvoRemoved);
+        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, gorahnShift, prorahnteeDeltaWithTahvoRemoved);
         setCalculatedValue("gorahn", gorahn);
 
-        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.goranShiftedDelta = prorahnteeDeltaWithTahvoRemoved;
-        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.goranShiftedDelta = prorahnteeDeltaWithTahvoRemoved.toNumber();
+        gorahyan.conversionArtifacts.cavern.bigs.timeDeltasCalculated.gorahnShiftedDelta = prorahnteeDeltaWithTahvoRemoved;
+        gorahyan.conversionArtifacts.cavern.readonly.timeDeltasCalculated.gorahnShiftedDelta = prorahnteeDeltaWithTahvoRemoved.toNumber();
 
         /**
         * Calculate and Store the Prorahn

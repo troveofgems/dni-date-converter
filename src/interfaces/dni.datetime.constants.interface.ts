@@ -30,7 +30,7 @@ export interface DniDatetimeConstantsInterface {
             yahrShift: Big,
             gartahvoShift: Big,
             tahvoShift: Big,
-            goranShift: Big
+            gorahnShift: Big
         }
     },
     readonly: {
@@ -45,7 +45,7 @@ export interface DniDatetimeConstantsInterface {
             yahrShift: number,
             gartahvoShift: number,
             tahvoShift: number,
-            goranShift: number
+            gorahnShift: number
         }
     }
 }

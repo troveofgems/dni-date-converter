@@ -1,6 +1,6 @@
 import {describe, expect, test} from "@jest/globals";
 
-import DniGorahyan from "../index";
+import { DniGorahyan } from "../index";
 
 describe("Dn'i Constants Test Suite", () => {
     describe("Gorahyan D'ni Time Artifact Constants", () => {
@@ -50,7 +50,7 @@ describe("Dn'i Constants Test Suite", () => {
                 .toEqual(625);
         });
         test("Goran Delta Shift", () => {
-            expect(dniGorahyanInstantiated.gorahyan?.dniConstants.readonly.deltas.goranShift)
+            expect(dniGorahyanInstantiated.gorahyan?.dniConstants.readonly.deltas.gorahnShift)
                 .toEqual(25);
         });
     });

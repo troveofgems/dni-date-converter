@@ -2,9 +2,21 @@ import Big from "big.js";
 
 import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 import DniMonthConstants from "../constants/dni.month.constants";
-import { deAdjustForLeapSeconds } from "./leap.second.lib";
-import UtilsLib from "./utils.lib";
 
+import UtilsLib from "./utils.lib";
+import { deAdjustForLeapSeconds } from "./leap.second.lib";
+
+/**
+ * Default File Export
+ * */
+export default function convertCavernTimestampToSurfaceTimestamps(gorahyan: GorahyanInterface) {
+    const { convertCavernTimestampToSurface } = CavernConverterLib(gorahyan);
+    return convertCavernTimestampToSurface;
+}
+
+/**
+ * Internal File Methods
+ * */
 export function _getVaileeId(vaileeName: string): number {
     let id: number;
     try {
@@ -16,8 +28,11 @@ export function _getVaileeId(vaileeName: string): number {
     return id;
 }
 
-export default function CavernConverterLib(gorahyan: GorahyanInterface) {
+function CavernConverterLib(gorahyan: GorahyanInterface) {
     function setCavernTimeArtifactsByString(cavernDateTime: string, gorahyan: GorahyanInterface) {
+        // Store Requested Translation Date
+        gorahyan.cavern.convertedTimestamp = cavernDateTime;
+
         const
             splitOnBE = cavernDateTime.includes("BE"),
             parsedData = cavernDateTime.split(splitOnBE ? "BE" : "DE"),
@@ -68,7 +83,7 @@ export default function CavernConverterLib(gorahyan: GorahyanInterface) {
                 prorahn, gorahn, tahvo, gartahvo, yahr, vailee, hahr
             } = gorahyan.conversionArtifacts.cavern.bigs,
             {
-                goranShift, tahvoShift, gartahvoShift, yahrShift, vaileeShift, hahrShift
+                gorahnShift, tahvoShift, gartahvoShift, yahrShift, vaileeShift, hahrShift
             } = gorahyan.dniConstants.bigs.deltas,
             {
                 elapsedSecondsAtConvergence
@@ -76,7 +91,7 @@ export default function CavernConverterLib(gorahyan: GorahyanInterface) {
 
         // Convert current values for D'ni date to prorahntee (essentially, time since 1 Leefo 0 DE 0:0:0:0)
         let prorahnteeDelta = prorahn
-            .plus(gorahn.times(goranShift))
+            .plus(gorahn.times(gorahnShift))
             .plus(tahvo.times(tahvoShift))
             .plus(gartahvo.times(gartahvoShift));
 

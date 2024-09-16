@@ -1,15 +1,11 @@
 export interface Converters {
-    converters: {
-        surfaceToCavern: (surfaceDateTime?: Date | string | null | undefined) => string;
-        cavernToSurface: (cavernDateTimeString: string) => {};
-    };
+    surfaceToCavern: (surfaceDateTime?: Date | string | null | undefined) => string;
+    cavernToSurface: (cavernDateTimeString: string) => {};
 }
 
 export interface Tests {
-    tests: {
-        runControlTests: () => ControlTestResults;
-        simulateCatastrophicInitFailure: () => Error | void;
-    } | undefined;
+    runControlTests: () => ControlTestResults;
+    simulateCatastrophicInitFailure: () => Error | void;
 }
 
 interface ControlTestResults {
@@ -21,9 +17,9 @@ interface ControlTestResults {
         seconds: number;
     };
     generated: {
-        first_test: string;
-        second_test: string;
-        third_test: string;
+        first_test_results: string;
+        second_test_results: string;
+        third_test_results: string;
         fourth_test_results: {};
         fifth_test_results: {};
         sixth_test_results: {};

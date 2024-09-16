@@ -3,6 +3,11 @@ import {LeapSecondInterface} from "../interfaces/leap.second.interface";
 import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 
 export const leapProcessingConstants: LeapSecondInterface = {
+// List of leap second timestamps from 1972-01-01 to 2017-01-01.
+// These timestamps are in units of seconds since the NTP epoch, which is 1900-01-01 00:00:00,
+// and it is assumed that the number of leap seconds always increases by 1 for each entry.
+// Must be converted to JavaScript / Unix timestamps! deprecated source: https://www.ietf.org/timezones/data/leap-seconds.list
+// New Source List: https://data.iana.org/time-zones/data/leap-seconds.list
     leapSecondList: [
         2272060800, 2287785600, 2303683200, 2335219200, 2366755200, 2398291200, 2429913600, 2461449600,
         2492985600, 2524521600, 2571782400, 2603318400, 2634854400, 2698012800, 2776982400, 2840140800,
@@ -42,12 +47,6 @@ export function attachLeapSecondData() {
 
     return leapProcessingConstants;
 }
-
-// List of leap second timestamps from 1972-01-01 to 2017-01-01.
-// These timestamps are in units of seconds since the NTP epoch, which is 1900-01-01 00:00:00,
-// and it is assumed that the number of leap seconds always increases by 1 for each entry.
-// Must be converted to JavaScript / Unix timestamps! deprecated source: https://www.ietf.org/timezones/data/leap-seconds.list
-// New Source List: https://data.iana.org/time-zones/data/leap-seconds.list
 export function adjustForLeapSeconds(timestampInMS: Big, gorahyan: GorahyanInterface) {
     const { leapSecondListEpoch, leapSecondOffset } = gorahyan._leapSeconds;
 
@@ -68,7 +67,6 @@ export function adjustForLeapSeconds(timestampInMS: Big, gorahyan: GorahyanInter
 
     return adjustedTimestamp.toNumber();
 }
-
 export function deAdjustForLeapSeconds(timestampInMS: Big, gorahyan: GorahyanInterface) {
     // adjust a JavaScript timestamp for leap seconds
     const { leapSecondListEpoch, leapSecondOffset } = gorahyan._leapSeconds;

@@ -15,31 +15,31 @@ and D'ni date time strings to javascript date time objects.<br/><br/>
 - [License](#license)
 
 ## Installation
-This package is available through the npm registry.
-Before installing, download and install Node.js. 
-Node.js 20 or higher is required.
+This package is available through the [npm registry](https://www.npmjs.com/package/dni-cavern-time). Before installing, download and install Node.js. 
+Node.js 20 or higher is suggested.
+
 If this is a new project, make sure to create a package.json first with the npm init command.
 
 Installation is done using the npm install command:<br/>
 `$ npm install dni-cavern-time`
 
 ## Usage
-The D'ni Cavern Time Converter Package exports a class called DniGorahyan. 
+The D'ni Cavern Time Converter Package exports a default function called initDniGorahyan which once called, returns a 
+new instance of a DniGorahyan Class. 
 
-Once the DniGorahyan Class has been initialized in the file of your choice, the following methods become available to 
-run:
-1. surfaceToCavernTime(surfaceDateTime?: Date | string | null | undefined): string
+The following methods become available to run:
+1. surfaceToCavern(surfaceDateTime?: Date | string | null | undefined): string
    - This function
       - Accepts: <pre>new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
       - Returns: string - Dn'i Datetime Formatted <pre>Leetar 29 9680 DE 4:11:16:08</pre>
 
 Example - surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
 ```js
-import DniGorahyan from 'dni-cavern-time';
+import initDniGorahyan from 'dni-cavern-time';
 
 let 
-    dniTimeConverter = new DniGorahyan(),
-    { surfaceToCavern } = dniTimeConverter,
+    dniTimeConverter = initDniGorahyan(),
+    { surfaceToCavern } = dniTimeConverter.converters,
     surfaceTimestampToConvertToDniDT = "1991-04-21T09:54:00"; // Dn'i Date Time Calendar Convergence, Provided time should be local.
 
 const 
@@ -53,13 +53,17 @@ console.log(usingCallWithNoParams) // => Returns the user's system's current dat
 ```
 
 2. cavernToSurface(cavernDateTimeString: string): {}
-    - This
-```js
-import DniGorahyan from 'dni-cavern-time';
+    - This function
+        - Accepts/Requires: Dn'i Datetime Formatted String <pre>Leetar 29 9680 DE 4:11:16:08</pre>
+        - Returns: object <pre>{ utc: string, cavern: string, local: string }</pre>
 
-let 
-    dniTimeConverter = new DniGorahyan(),
-    { cavernToSurface } = dniTimeConverter,
+Example - cavernToSurface(surfaceDateTime: string):
+```js
+import initDniGorahyan from 'dni-cavern-time';
+
+let
+    dniTimeConverter = initDniGorahyan(),
+    { cavernToSurface } = dniTimeConverter.converters,
     dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:00";
 
 const convertedTS = cavernToSurface(dniTimestampToConvertToSurfaceDT);
@@ -71,7 +75,7 @@ console.log(convertedTS);
       - Accepts: No Parameters
       - Returns: Thrown Error 
       ``` 
-      Error: cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized
+      Error: cavernToSurface(), surfaceToCavern(), or gorahyan{} is not initialized
         at DniGorahyan._handleUninitializedConstructorArtifact
       ```
         - Purpose:
@@ -79,11 +83,13 @@ console.log(convertedTS);
               
 Example - Simulate Catastrophic Failure:
 ```js
-import DniGorahyan from 'dni-cavern-time';
+import initDniGorahyan from 'dni-cavern-time';
 
-let dniTimeConverter = new DniGorahyan();
+let
+    dniTimeConverter = initDniGorahyan(),
+    { simulateCatastrophicInitFailure } = dniTimeConverter.tests;
 
-dniTimeConverter.simulateCatastrophicObjectFailure();
+console.log(simulateCatastrophicInitFailure());
 ```
 4. runControlTests(): {}
     - This function:
@@ -100,19 +106,23 @@ dniTimeConverter.simulateCatastrophicObjectFailure();
       - Purpose: 
         - To Execute Associated DniGorahyan Functions And Confirm Return Values of Known Date Conversions. 
       - Functions Executed:
-        - first_test: surfaceToCavernTime() => Date defaults to new Date(), Returns formatted to D'ni DateTime, 
-        - second_test: surfaceToCavernTime(`'1991-04-21T09:54:00'`) => Returns string formatted to D'ni DateTime,
-        - third_test: surfaceToCavernTime(`new Date('1991-04-21T09:54:00')`) => Returns string formatted to D'ni DateTime,
-        - fourth_test: cavernToSurfaceTime(`'Leefo 1 9647 DE 0:00:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
+        - first_test_results: surfaceToCavern() => Date defaults to new Date(), Returns formatted to D'ni DateTime, 
+        - second_test_results: surfaceToCavern(`'1991-04-21T09:54:00'`) => Returns string formatted to D'ni DateTime,
+        - third_test_results: surfaceToCavern(`new Date('1991-04-21T09:54:00')`) => Returns string formatted to D'ni DateTime,
+        - fourth_test_results: cavernToSurface(`'Leefo 1 9647 DE 0:00:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
+        - fifth_test_results: cavernToSurface(`'Leevofo 8 9798 DE 2:13:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
+        - sixth_test_results: cavernToSurface(`'Leevosahn 5 9000 BE 1:05:06:07'`) => Returns object with UTC, Cavern, and Local DateTimes
 in earth notation.
         
 Example - Run Control Tests:
 ```js
-import DniGorahyan from 'dni-cavern-time';
+import initDniGorahyan from 'dni-cavern-time';
 
-let dniTimeConverter = new DniGorahyan();
+let
+    dniTimeConverter = initDniGorahyan(),
+    { runControlTests } = dniTimeConverter.tests;
 
-console.log(dniTimeConverter.runControlTests());
+console.log(runControlTests());
 ```
 
 ## Contributing
@@ -132,7 +142,7 @@ you may share your contributions, to do so:
 5. Create a pull request.
 
 ## Jest Test Suites
-The last run coverage test report may be viewed [here](#https://troveofgems.github.io/dni-date-converter/).
+The last run coverage test report may be viewed [here](https://troveofgems.github.io/dni-date-converter/).
 
 This package utilizes the Jest Testing Framework to test the code contained within this package.
 All tests are found at the following directory structure and this is where all tests should be placed: `src/test` 

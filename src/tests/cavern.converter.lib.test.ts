@@ -1,5 +1,5 @@
 import {describe, test, expect} from "@jest/globals"
-import DniGorahyan from "../index";
+import { DniGorahyan } from "../index";
 
 import CavernConverterLib from "../lib/cavern.converter.lib";
 import { _getVaileeId } from "../lib/cavern.converter.lib";
@@ -12,21 +12,6 @@ describe("Test Suite For Cavern Converter Library", () => {
                 dniGorahyan = new DniGorahyan(),
                 cavernConverterLib = CavernConverterLib(dniGorahyan.gorahyan);
             expect(cavernConverterLib).not.toBeNull();
-        });
-    });
-
-    // Functions Exposed
-    describe("Functions Exposed", () => {
-        let
-            dniGorahyan = new DniGorahyan(),
-            cavernConverterLib = CavernConverterLib(dniGorahyan.gorahyan);
-
-        test("convertCavernTimestampToSurface() Function Exposed", () => {
-            expect(typeof cavernConverterLib.convertCavernTimestampToSurface).toBe("function");
-        });
-
-        test("convertCavernTimestampToSurface() Function Exposed", () => {
-            expect(typeof _getVaileeId).toBe("function");
         });
     });
 

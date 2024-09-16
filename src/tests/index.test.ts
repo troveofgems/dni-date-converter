@@ -1,6 +1,6 @@
 import {describe, expect, test} from "@jest/globals";
 
-import DniGorahyan from "../index";
+import initDniGorahyan, { DniGorahyan } from "../index";
 
 describe("Interface Test Suite", () => {
     describe("DniGorahyan Instantiation", () => {
@@ -20,23 +20,23 @@ describe("Interface Test Suite", () => {
     describe("DniGorahyan Function Definitions", () => {
         test("surfaceToCavernTimeConverter() is Defined", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            expect(typeof dniGorahyanInstantiated.surfaceToCavernTime).toBe("function");
+            expect(typeof dniGorahyanInstantiated.converters.surfaceToCavern).toBe("function");
         });
         test("cavernToSurfaceTimeConverter() is Defined", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            expect(typeof dniGorahyanInstantiated.cavernToSurfaceTime).toBe("function");
+            expect(typeof dniGorahyanInstantiated.converters.cavernToSurface).toBe("function");
         });
         test("runControlTests() is Defined", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            expect(typeof dniGorahyanInstantiated.runControlTests).toBe("function");
+            expect(typeof dniGorahyanInstantiated.tests.runControlTests).toBe("function");
         });
     });
 
     describe("DniGorahyan surfaceToCavernTimeConverter() Function Calls", () => {
         test("surfaceToCavernTimeConverter() Called With No Arguments Passed", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated, "surfaceToCavernTime");
-            const result = dniGorahyanInstantiated.surfaceToCavernTime();
+            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated.converters, "surfaceToCavern");
+            const result = dniGorahyanInstantiated.converters.surfaceToCavern();
 
             expect(typeof result).toBe("string");
 
@@ -48,9 +48,9 @@ describe("Interface Test Suite", () => {
         });
         test("surfaceToCavernTimeConverter('1991-04-21T09:54:00') Called With DateString Passed", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated, "surfaceToCavernTime");
+            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated.converters, "surfaceToCavern");
 
-            const result = dniGorahyanInstantiated.surfaceToCavernTime("1991-04-21T09:54:00");
+            const result = dniGorahyanInstantiated.converters.surfaceToCavern("1991-04-21T09:54:00");
 
             expect(result).toBe("Leefo 1 9647 DE 0:00:00:00");
 
@@ -62,9 +62,9 @@ describe("Interface Test Suite", () => {
         });
         test("surfaceToCavernTimeConverter(new Date('1991-04-21T09:54:00')) Called With DateObject Passed", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated, "surfaceToCavernTime");
+            const surfaceToCavernTimeSpy = jest.spyOn(dniGorahyanInstantiated.converters, "surfaceToCavern");
 
-            const result = dniGorahyanInstantiated.surfaceToCavernTime(new Date("1991-04-21T09:54:00"));
+            const result = dniGorahyanInstantiated.converters.surfaceToCavern(new Date("1991-04-21T09:54:00"));
 
             expect(result).toBe("Leefo 1 9647 DE 0:00:00:00");
 
@@ -79,8 +79,8 @@ describe("Interface Test Suite", () => {
     describe("DniGorahyan cavernToSurfaceTimeConverter() Function Calls", () => {
         test("cavernToSurfaceTimeConverter() Called With D'ni DateTime String Passed", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
-            const cavernToSurfaceTimeSpy = jest.spyOn(dniGorahyanInstantiated, "cavernToSurfaceTime");
-            const result = dniGorahyanInstantiated.cavernToSurfaceTime("Leefo 1 9647 DE 0:00:00:00");
+            const cavernToSurfaceTimeSpy = jest.spyOn(dniGorahyanInstantiated.converters, "cavernToSurface");
+            const result = dniGorahyanInstantiated.converters.cavernToSurface("Leefo 1 9647 DE 0:00:00:00");
 
             // Check the spy if the method was called correctly.
             expect(cavernToSurfaceTimeSpy).toHaveBeenCalled();
@@ -94,16 +94,16 @@ describe("Interface Test Suite", () => {
         test("runControlTests(false) Called", () => {
             const
                 dniGorahyanInstantiated = new DniGorahyan(),
-                runControlTestsSpy = jest.spyOn(dniGorahyanInstantiated, "runControlTests"),
-                callResults = dniGorahyanInstantiated.runControlTests();
+                runControlTestsSpy = jest.spyOn(dniGorahyanInstantiated.tests, "runControlTests"),
+                callResults = dniGorahyanInstantiated.tests.runControlTests();
 
             // Result Should Be Object With Runtime Statistics and Function Results
             expect(typeof callResults).toBe("object");
 
             // Test Return Values For Known Tests
-            expect(callResults.generated.first_test).toBe("Leefo 1 9647 DE 0:00:00:00");
-            expect(callResults.generated.second_test).toBe("Leefo 1 9647 DE 0:00:00:00");
-            expect(typeof callResults.generated.third_test).toBe("string");
+            expect(callResults.generated.first_test_results).toBe("Leefo 1 9647 DE 0:00:00:00");
+            expect(callResults.generated.second_test_results).toBe("Leefo 1 9647 DE 0:00:00:00");
+            expect(typeof callResults.generated.third_test_results).toBe("string");
 
             // Check the spy if the method was called correctly.
             expect(runControlTestsSpy).toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe("Interface Test Suite", () => {
             const dniGorahyanInstantiated = new DniGorahyan();
 
             // Spy on the instance method
-            const simulateCatastrophicObjectFailureSpy = jest.spyOn(dniGorahyanInstantiated, "simulateCatastrophicObjectFailure");
+            const simulateCatastrophicObjectFailureSpy = jest.spyOn(dniGorahyanInstantiated.tests, "simulateCatastrophicInitFailure");
 
             expect(simulateCatastrophicObjectFailureSpy).toThrow();
 
@@ -135,24 +135,17 @@ describe("Interface Test Suite", () => {
             // Restore the mock and revert original implementation
             simulateCatastrophicObjectFailureSpy.mockClear();
         });
-        test("From Attached Test Object", () => {
-            const
-                dniGorahyanInstantiated = new DniGorahyan(),
-                { test } = dniGorahyanInstantiated;
+    });
 
-            // @ts-ignore
-            dniGorahyanInstantiated.gorahyan = null;
-
-            // Spy on the instance method
-            const simulateCatastrophicObjectFailureSpy = jest.spyOn(test, "handleUninitializedConstructorArtifact");
-
-            expect(simulateCatastrophicObjectFailureSpy).toThrow("cavernToSurfaceTime(), surfaceToCavernTime(), or gorahyan{} is not initialized");
-
-            // Check if the spy was called
-            expect(simulateCatastrophicObjectFailureSpy).toHaveBeenCalled();
-
-            // Restore the mock and revert original implementation
-            simulateCatastrophicObjectFailureSpy.mockClear();
+    describe("Test Main Exportable Function", () => {
+        const dniGorahyanInitializer = initDniGorahyan;
+        test("Gorahyan Initializer Available", () => {
+            expect(typeof dniGorahyanInitializer).toBe("function");
+        });
+        test("Gorahyan Initialized", () => {
+            expect(typeof dniGorahyanInitializer()).toBe("object");
         });
     });
 });
+
+

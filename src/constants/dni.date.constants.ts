@@ -1,32 +1,16 @@
+// Date of Calendar Convergence Was: "Leefo 1 9647 DE 0:00:00:000" || "1991-04-21T09:54:00"
 import Big from 'big.js';
 import {DniDatetimeConstantsInterface} from "../interfaces/dni.datetime.constants.interface";
 
 const // DO NOT CHANGE THESE VALUES WITHOUT PROPER CONSIDERATION!
-    DNI_DATE_OF_CALENDAR_CONVERGENCE_STR = "Leefo 1 9647 DE 0:00:00:000",
     EARTH_DATE_OF_CALENDAR_CONVERGENCE_STR = "1991-04-21T09:54:00",
     DATE_OF_CALENDAR_CONVERGENCE = new Date(Date.UTC(1991, 4 - 1, 21, 16, 54, 0)),
-    DATE_OF_CALENDAR_CONVERGENCE_OBJ = DATE_OF_CALENDAR_CONVERGENCE,
     MS_PER_HAHR = 31556925216, // the exact value is 31556925.216 seconds
-    REF_DNI_HAHR = 9647, // Date Of Convergence
-    PRORAHNTEE_PER_HAHR = 22656250,
-    REF_PRORAHNTEE_PER_HAHR = 218564843750,
-    MS_PER_PRORAHN = 1392.8573888441379,
+    REF_DNI_HAHR = 9647, // D'ni Hahr Of Convergence
+    PRORAHNTEE_PER_HAHR = 22656250, // Number of Prorahntee in 1 Hahr
+    REF_PRORAHNTEE_PER_HAHR = 218564843750, // Prorahntee Elapsed Since Calendar Convergence
+    MS_PER_PRORAHN = 1392.8573888441379, // Milliseconds per Prorahntee
     TOTAL_DNI_VAILEE = 10;
-/*
-    A vailee is roughly equivalent to a month.
-    There are 10 equal vaileetee in each hahr.
-    Their approximate respective dates on the Gregorian calendar are:
-        Leefo: April 21 - May 27
-        Leebro: May 28 - July 3
-        Leesahn: July 3 - August 8
-        Leetar: August 9 - September 14
-        Leevot: September 14 - October 20
-        Leevofo: October 21 - November 26
-        Leevobro: November 26 - January 1
-        Leevosahn: January 2 - Febuary 7
-        Leevotar: Febuary 7 - March 15
-        Leenovoo: March 16 - April 21
-* */
 
 export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
     let constantsAsBigs = {
@@ -42,7 +26,7 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
             yahrShift: Big(78125),
             gartahvoShift: Big(15625),
             tahvoShift: Big(625),
-            goranShift: Big(25)
+            gorahnShift: Big(25)
         }
     }
 
@@ -58,7 +42,7 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
         dates: {
             calendarConvergence: {
                 earthConvergenceDateTimeString: EARTH_DATE_OF_CALENDAR_CONVERGENCE_STR,
-                earthConvergenceDateTimeObject: DATE_OF_CALENDAR_CONVERGENCE_OBJ
+                earthConvergenceDateTimeObject: DATE_OF_CALENDAR_CONVERGENCE
             },
             utc: {
                 convergence: DATE_OF_CALENDAR_CONVERGENCE,
@@ -86,7 +70,7 @@ export default function DniDateTimeConstants(): DniDatetimeConstantsInterface {
                 yahrShift: constantsAsBigs.deltas.yahrShift.toNumber(),
                 gartahvoShift: constantsAsBigs.deltas.gartahvoShift.toNumber(),
                 tahvoShift: constantsAsBigs.deltas.tahvoShift.toNumber(),
-                goranShift: constantsAsBigs.deltas.goranShift.toNumber()
+                gorahnShift: constantsAsBigs.deltas.gorahnShift.toNumber()
             }
         }
     };

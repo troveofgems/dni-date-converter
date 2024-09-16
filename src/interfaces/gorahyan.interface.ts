@@ -32,7 +32,7 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     yahrShiftedDelta: Big,
                     gartahvoShiftedDelta: Big,
                     tahvoShiftedDelta: Big,
-                    goranShiftedDelta: Big
+                    gorahnShiftedDelta: Big
                 }
             },
             readonly: {
@@ -55,7 +55,7 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     yahrShiftedDelta: number,
                     gartahvoShiftedDelta: number,
                     tahvoShiftedDelta: number,
-                    goranShiftedDelta: number
+                    gorahnShiftedDelta: number
                 }
             }
         },

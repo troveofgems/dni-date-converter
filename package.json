@@ -21,9 +21,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc && cp LICENSE dist && cp README.md dist && cp package.json dist ",
-    "dev": "ts-node src/index.ts",
-    "test": "jest --config jest.config.ts"
+    "build": "rm -rf dist && tsc && cp LICENSE dist && cp README.md dist && cp package.json dist",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "start": "ts-node src/index.ts",
+    "test": "jest --config jest.config.ts && npm run ucr",
+    "ucr": "rm -rf docs/* && cp -r coverage/lcov-report/* docs"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -37,6 +39,7 @@
     "nodemon": "^3.1.4",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.1",
     "typescript": "^5.5.3"
   },

@@ -3,21 +3,16 @@ import GorahyanInitLib, { setConvergenceTimeArtifacts } from "./lib/gorahyan.ini
 
 import SurfaceConverterLib from "./lib/surface.converter.lib";
 import CavernConverterLib from "./lib/cavern.converter.lib";
+import {Converters, Tests} from "./interfaces/converters.interface";
 
 export default class DniGorahyan {
     public gorahyan: GorahyanInterface = setConvergenceTimeArtifacts(GorahyanInitLib()); // Expose Selected Class Internals So Others May Review Calculations/Values As Needed
-    public runControlTests;
-    public surfaceToCavern;
-    public cavernToSurface;
-    public test;
+    //public gorahyan_2: GorahyanInterface;
+    public converters!: Converters;
+    public tests!: Tests;
 
     constructor() {
-        this.surfaceToCavern = this.surfaceToCavernTime;
-        this.cavernToSurface = this.cavernToSurfaceTime;
-        this.runControlTests = this._runControlTests;
-        this.test = {
-            handleUninitializedConstructorArtifact: this._handleUninitializedConstructorArtifact
-        }
+        this._init(this);
     }
 
     // Public Methods Available: surfaceToCavernTime, cavernToSurfaceTime, runControlTests, simulateCatastrophicObjectFailure
@@ -42,6 +37,9 @@ export default class DniGorahyan {
     public simulateCatastrophicObjectFailure(): Error | void {
         return this._handleUninitializedConstructorArtifact(true);
     }
+
+    // Getter Methods
+    // Setter Methods
 
     // Private Methods
     private _runControlTests() {
@@ -128,4 +126,27 @@ export default class DniGorahyan {
             seconds
         }
     }
+
+    // Initialize Class And Link Public Methods
+    private _init(classToInstantiate: DniGorahyan) {
+        // Set the Converter Functions
+        console.log("Inside _init()", classToInstantiate.converters);
+
+
+        classToInstantiate.converters = {
+            surfaceToCavern: this.surfaceToCavernTime,
+            cavernToSurface: this.cavernToSurfaceTime,
+        };
+
+        // Set the Test Functions
+        classToInstantiate.tests = {
+          runControlTests: this._runControlTests,
+          simulateCatastrophicInitFailure: this.simulateCatastrophicObjectFailure
+        };
+
+        return classToInstantiate;
+    }
 }
+
+let test = new DniGorahyan();
+console.log(test);

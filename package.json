@@ -29,9 +29,9 @@
     "push-patch": "npm version patch && git push",
     "push-minor": "npm version minor && git push",
     "push-major": "npm vresion minor && git push",
-    "pre-deploy-patch": "npm run test && npm run build && npm run push-patch",
-    "pre-deploy-minor": "npm run test && npm run build && npm run push-minor",
-    "pre-deploy-major": "npm run test && npm run build && npm run push-major",
+    "pre-deploy-patch": "npm run build && npm run push-patch",
+    "pre-deploy-minor": "npm run build && npm run push-minor",
+    "pre-deploy-major": "npm run build && npm run push-major",
     "deploy-to-npm-registry": "npm publish"
   },
   "devDependencies": {

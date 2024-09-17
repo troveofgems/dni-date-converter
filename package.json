@@ -18,11 +18,11 @@
     "typescript",
     "node"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && npm run copyArtifactsPostBuild",
-    "copyArtifactsPostBuild": "cp package.json dist && cp ./*.md dist",
+    "copyArtifactsPostBuild": "cp package.json dist && cp ./*.md dist && cp LICENSE dist",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "ts-node src/index.ts",
     "test": "jest --config jest.config.ts && npm run ucr",

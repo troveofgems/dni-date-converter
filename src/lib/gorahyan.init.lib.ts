@@ -4,7 +4,7 @@ import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 
 // Functions Called During Init
 import DniDateTimeConstants from "../constants/dni.date.constants";
-import { attachLeapSecondData } from "./leap.second.lib";
+import {attachLeapSecondData} from "./leap.second.lib";
 
 // Functions Attached During Init
 import convertSurfaceTimestampToDniCavernTimestamp, { setSurfaceTimeArtifactsByString } from "./surface.converter.lib";
@@ -13,8 +13,6 @@ import convertCavernTimestampToSurfaceTimestamps from "./cavern.converter.lib";
 /** Initializes the request for a DniGorahyan Object.
  *
  * @param dniGorahyan
- *
- * @param jestForceError
  *
  * @description
  * - Sets D'ni Time Conversion Constants & Initial Values, Processes the LeapEpoch List, and sets D'ni Calendar

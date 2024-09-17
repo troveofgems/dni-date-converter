@@ -1,5 +1,5 @@
 export interface Converters {
-    surfaceToCavern: (surfaceDateTime?: Date | string | null | undefined) => string;
+    surfaceToCavern: (surfaceDateTime?: Date | string | null | undefined, useDniFontMapping?: boolean) => string;
     cavernToSurface: (cavernDateTimeString: string) => {};
 }
 

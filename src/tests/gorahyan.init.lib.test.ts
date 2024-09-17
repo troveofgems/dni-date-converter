@@ -6,7 +6,7 @@ import {DniGorahyan} from "../index";
 describe("Gorahyan Init Library Test Suite", () => {
     describe("Library Loaded", () => {
         test("Library Loaded{} Instantiated", () => {
-            let gorahyanInstantiated: DniGorahyan | Error | null = init(new DniGorahyan());
+            let gorahyanInstantiated: DniGorahyan | Error | null = new DniGorahyan();
             expect(gorahyanInstantiated).not.toBe(null);
             gorahyanInstantiated = null;
         });
@@ -14,12 +14,12 @@ describe("Gorahyan Init Library Test Suite", () => {
 
     describe("Converters Exposed", () => {
         test("surfaceToCavern() Function Exposed", () => {
-            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            let gorahyanInstantiated: DniGorahyan | null = new DniGorahyan();
             expect(typeof gorahyanInstantiated.converters.surfaceToCavern).toBe("function");
             gorahyanInstantiated = null;
         });
         test("cavernToSurface() Function Exposed", () => {
-            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            let gorahyanInstantiated: DniGorahyan | null = new DniGorahyan();
             expect(typeof gorahyanInstantiated.converters.cavernToSurface).toBe("function");
             gorahyanInstantiated = null;
         });
@@ -27,7 +27,7 @@ describe("Gorahyan Init Library Test Suite", () => {
 
     describe("Thrown Error Rendered", () => {
         test("Test throw new Error()", () => {
-            let gorahyanInstantiated: DniGorahyan | null = init(new DniGorahyan());
+            let gorahyanInstantiated: DniGorahyan | null = new DniGorahyan();
             expect(() => testForFailedInit(gorahyanInstantiated, true)).toThrow("Class Init Failed. Unable to set methods or properties");
         });
     });

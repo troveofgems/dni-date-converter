@@ -6,7 +6,7 @@ import { Converters, Tests } from "./interfaces/converters.interface";
 import { init } from "./lib/gorahyan.init.lib";
 
 // Main Index File Export Wrapper
-export default function initDniGorahyan(): DniGorahyan {
+export default function testT(): DniGorahyan {
     return new DniGorahyan();
 };
 

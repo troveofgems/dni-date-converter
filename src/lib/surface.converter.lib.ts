@@ -69,7 +69,7 @@ export function SurfaceConverterLib(gorahyan: GorahyanInterface) {
 
         return adjustForLeapSeconds(Big(temp), gorahyan);
     }
-    const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined, DEBUG: boolean = false) {
+    const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined, useDniFontMapping: boolean = false) {
         let // Process And Store Surface Time Artifacts
             stringPassed = typeof surfaceDateTime === "string",
             dateObjectPassed = typeof surfaceDateTime === "object",
@@ -208,7 +208,7 @@ export function SurfaceConverterLib(gorahyan: GorahyanInterface) {
         * Adjust All Calculated Times As Needed And Return Final TS Value
         * */
         adjustCalculatedTimes();
-        return _getDniConvertedTimestamp();
+        return _getDniConvertedTimestamp(useDniFontMapping);
     }
 
     const shiftDelta = function(dniUnit: number, dniUnitShift: Big, currentDelta: Big): Big {
@@ -348,7 +348,7 @@ export function SurfaceConverterLib(gorahyan: GorahyanInterface) {
             gorahyan.conversionArtifacts.cavern.bigs.yahr.toNumber();
     }
 
-    const _getDniConvertedTimestamp = function() {
+    const _getDniConvertedTimestamp = function(useDniFontMapping: boolean = false) {
         const {
             hahr, vailee, yahr,
             gartahvo, tahvo, gorahn, prorahn
@@ -360,13 +360,14 @@ export function SurfaceConverterLib(gorahyan: GorahyanInterface) {
             paddedTahvo = padValue(tahvo),
             paddedGorahn = padValue(gorahn),
             paddedProrahn = padValue(prorahn),
-            dateIsBE = hahr < 0;
+            dateIsBE = hahr < 0,
+            resolvedVaileeText = useDniFontMapping ? vailee.dniFontMappingText : vailee.text
 
         if(dateIsBE) {
-            constructedDate = vailee.text + " " + yahr + " " + (hahr * -1) + " BE ";
+            constructedDate = resolvedVaileeText + " " + yahr + " " + (hahr * -1) + " BE ";
             constructedTime = gartahvo + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn;
         } else {
-            constructedDate = vailee.text + " " + yahr + " " + hahr + " DE ";
+            constructedDate = resolvedVaileeText + " " + yahr + " " + hahr + " DE ";
             constructedTime = gartahvo + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn;
         }
 

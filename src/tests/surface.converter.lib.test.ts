@@ -21,6 +21,24 @@ describe("Test Suite For Surface Converter Function", () => {
     });
 
     describe('Adjustment Tests', () => {
+        test("Test DniFontMapping Text", () => {
+            let dniGorahyan = new DniGorahyan();
+
+            const dniFontMappingValueSpy = jest.spyOn(dniGorahyan.converters, "surfaceToCavern");
+
+            const result = dniGorahyan.converters.surfaceToCavern("1991-04-21T09:54:00", true);
+
+            expect(result).toEqual("lEfo 1 9647 DE 0:00:00:00");
+
+            // Check the spy if the method was called correctly.
+            expect(dniFontMappingValueSpy).toHaveBeenCalled();
+
+            // Restore the mock and revert original implementation.
+            dniFontMappingValueSpy.mockClear();
+        });
+    });
+
+    describe('Adjustment Tests', () => {
         test("Test adjustTimeValue() For Out of Bounds Prorahn", () => {
             let
                 dniGorahyan = new DniGorahyan(),

@@ -28,10 +28,16 @@ The D'ni Cavern Time Converter Package exports a default function called initDni
 new instance of a DniGorahyan Class. 
 
 The following methods become available to run:
-1. surfaceToCavern(surfaceDateTime?: Date | string | null | undefined): string
+1. surfaceToCavern(surfaceDateTime?: Date | string | null | undefined, useDniFontMapping?: boolean): string
    - This function
-      - Accepts: <pre>new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
-      - Returns: string - Dn'i Datetime Formatted <pre>Leetar 29 9680 DE 4:11:16:08</pre>
+      - Accepts
+      <pre>surfaceDateTime?: new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
+      <pre>useDniFontMapping?: boolean</pre>
+      - Returns: string - Dn'i Datetime Formatted <br/>
+      <pre>useDniFontMapping: null | false => Leetar 29 9680 DE 4:11:16:08</pre>
+      <pre>useDniFontMapping: true => LEtar 29 9680 DE 4:11:16:08</pre>
+    
+    * Note: D'ni Font Mapping is meant to be used with a proper D'ni Font File.
 
 Example: ES6 Import Syntax -  surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
 ```js
@@ -45,10 +51,12 @@ let
 const 
     usingString = surfaceToCavern(surfaceTimestampToConvertToDniDT),
     usingDate = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingDateAndDniFontMapping = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT), true),
     usingCallWithNoParams = surfaceToCavern();
 
 console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
+console.log(usingDateAndDniFontMapping); // => 1991-04-21T09:54:00 Always returns LEfo 1 9647 DE 0:00:00:00
 console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
 ```
 Example: CommonJs Import Syntax -  surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
@@ -61,10 +69,12 @@ let { surfaceToCavern } = dniTimeConverter.converters,
 const 
     usingString = surfaceToCavern(surfaceTimestampToConvertToDniDT),
     usingDate = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingDate = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT), true),
     usingCallWithNoParams = surfaceToCavern();
 
 console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
+console.log(usingDate); // => 1991-04-21T09:54:00 Always returns LEfo 1 9647 DE 0:00:00:00
 console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
 ```
 
@@ -72,6 +82,8 @@ console.log(usingCallWithNoParams) // => Returns the user's system's current dat
     - This function
         - Accepts/Requires: Dn'i Datetime Formatted String <pre>Leetar 29 9680 DE 4:11:16:08</pre>
         - Returns: object <pre>{ utc: string, cavern: string, local: string }</pre>
+   
+   * Note: Do not pass a D'ni Font Mapping Value - This will be handled in a later release.
 
 Example: ES6 Import Syntax - cavernToSurface(surfaceDateTime: string):
 ```js

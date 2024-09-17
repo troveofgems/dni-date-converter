@@ -7,7 +7,7 @@ and D'ni date time strings to javascript date time objects.<br/><br/>
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Contributing](https://github.com/troveofgems/dni-date-converter/blob/main/CONTRIBUTING.md)
 - [Jest Test Suites](#jest-test-suites)
 - [More Resources](#more-resources)
 - [About](#about)
@@ -33,7 +33,7 @@ The following methods become available to run:
       - Accepts: <pre>new Date() | "2024-09-13T08:50:00" | null | undefined</pre>
       - Returns: string - Dn'i Datetime Formatted <pre>Leetar 29 9680 DE 4:11:16:08</pre>
 
-Example - surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
+Example: ES6 Import Syntax -  surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
 ```js
 import initDniGorahyan from 'dni-cavern-time';
 
@@ -51,19 +51,46 @@ console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 
 console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
 console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
 ```
+Example: CommonJs Import Syntax -  surfaceToCavern(surfaceDateTime?: Date | string | null | undefined):
+```js
+const dniTimeConverter = require('dni-cavern-time').default();
+
+let { surfaceToCavern } = dniTimeConverter.converters,
+    surfaceTimestampToConvertToDniDT = "1991-04-21T09:54:00"; // Dn'i Date Time Calendar Convergence, Provided time should be local.
+
+const 
+    usingString = surfaceToCavern(surfaceTimestampToConvertToDniDT),
+    usingDate = surfaceToCavern(new Date(surfaceTimestampToConvertToDniDT)),
+    usingCallWithNoParams = surfaceToCavern();
+
+console.log(usingString); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
+console.log(usingDate); // => 1991-04-21T09:54:00 Always returns Leefo 1 9647 DE 0:00:00:00
+console.log(usingCallWithNoParams) // => Returns the user's system's current date-time in D'ni;
+```
 
 2. cavernToSurface(cavernDateTimeString: string): {}
     - This function
         - Accepts/Requires: Dn'i Datetime Formatted String <pre>Leetar 29 9680 DE 4:11:16:08</pre>
         - Returns: object <pre>{ utc: string, cavern: string, local: string }</pre>
 
-Example - cavernToSurface(surfaceDateTime: string):
+Example: ES6 Import Syntax - cavernToSurface(surfaceDateTime: string):
 ```js
 import initDniGorahyan from 'dni-cavern-time';
 
 let
     dniTimeConverter = initDniGorahyan(),
     { cavernToSurface } = dniTimeConverter.converters,
+    dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:00";
+
+const convertedTS = cavernToSurface(dniTimestampToConvertToSurfaceDT);
+
+console.log(convertedTS);
+```
+Example: CommonJs Import Syntax - cavernToSurface(surfaceDateTime: string):
+```js
+const dniTimeConverter = require('dni-cavern-time').default();
+
+let { cavernToSurface } = dniTimeConverter.converters,
     dniTimestampToConvertToSurfaceDT = "Leefo 1 9647 DE 0:00:00:00";
 
 const convertedTS = cavernToSurface(dniTimestampToConvertToSurfaceDT);
@@ -80,8 +107,8 @@ console.log(convertedTS);
       ```
         - Purpose:
             - To test the error handling when any of the DniGorahyan properties or methods are somehow overwritten.
-              
-Example - Simulate Catastrophic Failure:
+
+Example: ES6 Import Syntax -  Simulate Catastrophic Failure:
 ```js
 import initDniGorahyan from 'dni-cavern-time';
 
@@ -91,16 +118,27 @@ let
 
 console.log(simulateCatastrophicInitFailure());
 ```
+Example: CommonJs Import Syntax -  Simulate Catastrophic Failure:
+```js
+const dniTimeConverter = require('dni-cavern-time').default();
+
+let { simulateCatastrophicInitFailure } = dniTimeConverter.tests;
+
+console.log(simulateCatastrophicInitFailure());
+```
+
 4. runControlTests(): {}
     - This function:
       - Accepts: No Parameters
       - Returns: Object <pre>{
     runtimeMetrics,
     generated: {
-      first_test: string,
-      second_test: string,
-      third_test: string,
-      fourth_test: { utc: string, cavern: string, local: string }
+      first_test_results: string,
+      second_test_results: string,
+      third_test_results: string,
+      fourth_test_results: { utc: string, cavern: string, local: string },
+      fifth_test_results: { utc: string, cavern: string, local: string },
+      sixth_test_results: { utc: string, cavern: string, local: string },
     }
 }</pre>
       - Purpose: 
@@ -109,12 +147,12 @@ console.log(simulateCatastrophicInitFailure());
         - first_test_results: surfaceToCavern() => Date defaults to new Date(), Returns formatted to D'ni DateTime, 
         - second_test_results: surfaceToCavern(`'1991-04-21T09:54:00'`) => Returns string formatted to D'ni DateTime,
         - third_test_results: surfaceToCavern(`new Date('1991-04-21T09:54:00')`) => Returns string formatted to D'ni DateTime,
-        - fourth_test_results: cavernToSurface(`'Leefo 1 9647 DE 0:00:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
-        - fifth_test_results: cavernToSurface(`'Leevofo 8 9798 DE 2:13:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes
+        - fourth_test_results: cavernToSurface(`'Leefo 1 9647 DE 0:00:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes,
+        - fifth_test_results: cavernToSurface(`'Leevofo 8 9798 DE 2:13:00:00'`) => Returns object with UTC, Cavern, and Local DateTimes,
         - sixth_test_results: cavernToSurface(`'Leevosahn 5 9000 BE 1:05:06:07'`) => Returns object with UTC, Cavern, and Local DateTimes
 in earth notation.
-        
-Example - Run Control Tests:
+
+Example: ES6 Import Syntax -  Run Control Tests:
 ```js
 import initDniGorahyan from 'dni-cavern-time';
 
@@ -124,22 +162,14 @@ let
 
 console.log(runControlTests());
 ```
+Example: CommonJs Import Syntax -  Run Control Tests:
+```js
+const dniTimeConverter = require('dni-cavern-time').default();
 
-## Contributing
-Contributions will not be accepted under the following conditions:
-- Work without jest test files written for the contribution,<br/>
-- If there have been changes made to the following file: `src/archive/original.source.code.js`
-<br/><br/>
-See the [About Section](#about) for more information.
+let { runControlTests } = dniTimeConverter.tests;
 
-Otherwise, if proper test files have been written and no changes have been made to the original source code file,
-you may share your contributions, to do so:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`
-3. Make your changes and include your test files.
-4. Push your branch: `git push origin feature-name`
-5. Create a pull request.
+console.log(runControlTests());
+```
 
 ## Jest Test Suites
 The last run coverage test report may be viewed [here](https://troveofgems.github.io/dni-date-converter/).
@@ -161,6 +191,8 @@ the Guild of Archivists.
 by Real Of Rium+
 3. [General D'ni Time Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time) by the Guild of Archivists
 4. [D'ni Time Conversion Wiki](https://archive.guildofarchivists.org/wiki/D%27ni_time_conversion)
+5. [Original Source Code](https://www.guildofarchivists.org/utilities/dateconverter/js/DniDate.js) Based on work by RIUM+, Jehon the Scribe, and rokama. Additional contributions by Brett Middleton on
+   the Guild of Archivists. 
 
 ## About
 The first item in the [More Resources](#more-resources) Section is the inspiration for this npm package. I would not 

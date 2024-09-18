@@ -192,7 +192,8 @@ All tests are found at the following directory structure and this is where all t
 The naming convention for test files should follow the format:<br/>
 `src/test/<dot-notation-filename>.test.ts`
 
-1. The following command will run the package tests: `npm run test`
+To run package tests, use the following command: 
+`$ npm test`
 
 ## More Resources
 Check out work done by others regarding D'ni Timekeeping!

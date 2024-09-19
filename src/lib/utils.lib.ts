@@ -19,9 +19,27 @@ export default function UtilsLib() {
         return s;
     }
 
+    const calculateElapsedRuntimeOfControlTests = function(testStart: Date, testEnd: Date) {
+        const
+            elapsedTimeInMS = testEnd.getTime() - testStart.getTime(),
+            seconds = Math.floor(elapsedTimeInMS / 1000),
+            minutes = Math.floor(seconds / 60),
+            hours = Math.floor(minutes / 60),
+            elapsedTimeMessage = `Elapsed time to run tests: ${hours} hours, ${minutes} minutes, ${seconds} seconds, ${elapsedTimeInMS} milliseconds`;
+
+        return {
+            elapsedTimeMessage,
+            elapsedTimeInMS,
+            hours,
+            minutes,
+            seconds
+        }
+    }
+
     return {
         safeStringOperation: _safeStringOperation,
         safeDateOperation: _safeDateOperation,
-        padValue: _padValue
+        padValue: _padValue,
+        calculateElapsedRuntimeOfControlTests
     }
 }

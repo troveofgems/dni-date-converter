@@ -1,5 +1,5 @@
 import Big from "big.js";
-import {DniGorahyan} from "../index";
+import DniGorahyan from "../index";
 import {GorahyanInterface} from "../interfaces/gorahyan.interface";
 
 // Functions Called During Init

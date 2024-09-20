@@ -1,6 +1,6 @@
 import {describe, expect, test} from "@jest/globals";
 
-import initDniGorahyan, { DniGorahyan } from "../index";
+import DniGorahyan from "../index";
 
 describe("Interface Test Suite", () => {
     describe("DniGorahyan Instantiation", () => {
@@ -101,7 +101,7 @@ describe("Interface Test Suite", () => {
             expect(typeof callResults).toBe("object");
 
             // Test Return Values For Known Tests
-            expect(callResults.generated.first_test_results).toBe("Leefo 1 9647 DE 0:00:00:00");
+            expect(dniGorahyanInstantiated.systemProvidedSurfaceTS).toBe("Leefo 1 9647 DE 0:00:00:00");
             expect(callResults.generated.second_test_results).toBe("Leefo 1 9647 DE 0:00:00:00");
             expect(typeof callResults.generated.third_test_results).toBe("string");
 
@@ -134,16 +134,6 @@ describe("Interface Test Suite", () => {
 
             // Restore the mock and revert original implementation
             simulateCatastrophicObjectFailureSpy.mockClear();
-        });
-    });
-
-    describe("Test Main Exportable Function", () => {
-        const dniGorahyanInitializer = initDniGorahyan;
-        test("Gorahyan Initializer Available", () => {
-            expect(typeof dniGorahyanInitializer).toBe("function");
-        });
-        test("Gorahyan Initialized", () => {
-            expect(typeof dniGorahyanInitializer()).toBe("object");
         });
     });
 });

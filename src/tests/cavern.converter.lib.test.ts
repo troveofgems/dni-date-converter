@@ -1,5 +1,5 @@
 import {describe, test, expect} from "@jest/globals"
-import { DniGorahyan } from "../index";
+import DniGorahyan from "../index";
 
 import CavernConverterLib from "../lib/cavern.converter.lib";
 import { _getVaileeId } from "../lib/cavern.converter.lib";
@@ -10,7 +10,7 @@ describe("Test Suite For Cavern Converter Library", () => {
         test("Successfully Loaded", () => {
             let
                 dniGorahyan = new DniGorahyan(),
-                cavernConverterLib = CavernConverterLib(dniGorahyan.gorahyan);
+                cavernConverterLib = CavernConverterLib(dniGorahyan);
             expect(cavernConverterLib).not.toBeNull();
         });
     });

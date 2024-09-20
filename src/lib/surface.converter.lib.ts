@@ -27,7 +27,7 @@ export function setNthBell(pahrtahvo: number): string {
 
     return `${pahrtahvo}${bellSuperScripts[pahrtahvo]} Bell`;
 }
-export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahyan: DniGorahyan) {
+export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, dniGorahyan: DniGorahyan) {
     const
         parsedData = surfaceDateTime.split("T"),
         requestedDate = parsedData[0].split("-"),
@@ -43,14 +43,14 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahya
     
     const monthData = EarthMonthConstants.filter(item => item.id === (month - 1));
 
-    gorahyan.userProvidedSurfaceTS = surfaceDateTime;
-    gorahyan.year = year;
-    gorahyan.monthId = monthData[0].id;
-    gorahyan.monthText = monthData[0].monthNameText;
-    gorahyan.day = day;
-    gorahyan.hour = hour;
-    gorahyan.minute = minute;
-    gorahyan.second = second;
+    dniGorahyan.userProvidedSurfaceTS = surfaceDateTime;
+    dniGorahyan.year = year;
+    dniGorahyan.monthId = monthData[0].id;
+    dniGorahyan.monthText = monthData[0].monthNameText;
+    dniGorahyan.day = day;
+    dniGorahyan.hour = hour;
+    dniGorahyan.minute = minute;
+    dniGorahyan.second = second;
 
     let dt = new Date(year, month - 1, day);
     dt.setUTCHours(hour);
@@ -58,7 +58,7 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahya
     dt.setUTCSeconds(second);
     let temp = Date.parse(dt.toISOString());
 
-    return adjustForLeapSeconds(Big(temp), gorahyan.gorahyan);
+    return adjustForLeapSeconds(Big(temp), dniGorahyan.gorahyan);
 }
 
 /**
@@ -238,7 +238,7 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
                 .toNumber();
         } else {
             // @ts-ignore
-            gorahyan[`${adjustsFor}tee`] = Big(gorahyan[`${adjustsFor}tee`])
+            dniGorahyan[`${adjustsFor}tee`] = Big(dniGorahyan[`${adjustsFor}tee`])
                 .plus(adjustment)
                 .toNumber();
         }
@@ -278,7 +278,7 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
                     .toNumber();
             } else {
                 // @ts-ignore
-                gorahyan[`${unitOfTime}tee`] = Big(gorahyan[`${unitOfTime}tee`])
+                dniGorahyan[`${unitOfTime}tee`] = Big(dniGorahyan[`${unitOfTime}tee`])
                     .plus(adjustedValue)
                     .toNumber();
             }

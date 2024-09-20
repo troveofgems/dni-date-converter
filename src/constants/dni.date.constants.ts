@@ -29,13 +29,36 @@ import {
     FOURTH_CONTROL_TEST_VALUE,
     FIFTH_CONTROL_TEST_VALUE,
     SIXTH_CONTROL_TEST_VALUE,
-    PRORAHN_MIN, PRORAHN_MAX,
-    GORAHN_MIN, GORAHN_MAX,
-    TAHVO_MIN, TAHVO_MAX,
-    GAHRTAHVO_MIN, GAHRTAHVO_MAX,
-    YAHR_MIN, YAHR_MAX,
-    VAILEE_MIN, VAILEE_MAX,
-    PAHRTAHVO_MIN, PAHRTAHVO_MAX
+    PRORAHN_MIN,
+    PRORAHN_MAX,
+    GORAHN_MIN,
+    GORAHN_MAX,
+    TAHVO_MIN,
+    TAHVO_MAX,
+    GAHRTAHVO_MIN,
+    GAHRTAHVO_MAX,
+    YAHR_MIN,
+    YAHR_MAX,
+    VAILEE_MIN,
+    VAILEE_MAX,
+    PAHRTAHVO_MIN,
+    PAHRTAHVO_MAX,
+    DNI_HOLIDAY_NEW_YEAR,
+    DNI_HOLIDAY_FIRST_FEAST_OF_THE_MAKER,
+    DNI_HOLIDAY_COMMON_LIBRARY_OPENING,
+    DNI_HOLIDAY_SECOND_FEAST_OF_THE_MAKER,
+    DNI_HOLIDAY_DAY_OF_DANCING,
+    DNI_HOLIDAY_FIRST_ARRIVAL_OF_THE_GREAT_KING,
+    DNI_HOLIDAY_THIRD_FEAST_OF_THE_MAKER,
+    DNI_HOLIDAY_CORONATION_OF_KING_KERATH,
+    DNI_HOLIDAY_DESC__FEAST_OF_THE_MAKER,
+    DNI_HOLIDAY_DESC__DNI_NEW_YEAR,
+    DNI_HOLIDAY_DESC__COMMON_LIBRARY_OPENING,
+    DNI_HOLIDAY_DESC__DAY_OF_DANCING,
+    DNI_HOLIDAY_DESC__FIRST_ARRIVAL_OF_THE_GREAT_KING,
+    DNI_HOLIDAY_DESC__CORONATION_OF_KING_KERATH,
+    THE_FALL,
+    THE_FALL__DESC
 } from "./date.constants";
 
 export default function DniGorahyanConstants(): DniDatetimeConstantsInterface {
@@ -165,6 +188,49 @@ export default function DniGorahyanConstants(): DniDatetimeConstantsInterface {
                     fourthTest: {},
                     fifthTest: {},
                     sixthTest: {}
+                }
+            },
+            importantDates: {
+                holidays: {
+                    firstFeastOfTheMaker: {
+                        date: DNI_HOLIDAY_FIRST_FEAST_OF_THE_MAKER,
+                        description: DNI_HOLIDAY_DESC__FEAST_OF_THE_MAKER
+                    },
+                    secondFeastOfTheMaker: {
+                        date: DNI_HOLIDAY_SECOND_FEAST_OF_THE_MAKER,
+                        description: DNI_HOLIDAY_DESC__FEAST_OF_THE_MAKER
+                    },
+                    thirdFeastOfTheMaker: {
+                        date: DNI_HOLIDAY_THIRD_FEAST_OF_THE_MAKER,
+                        description: DNI_HOLIDAY_DESC__FEAST_OF_THE_MAKER
+                    },
+                    newYear: {
+                        date: DNI_HOLIDAY_NEW_YEAR,
+                        description: DNI_HOLIDAY_DESC__DNI_NEW_YEAR
+                    },
+
+                    commonLibraryOpening: {
+                        date: DNI_HOLIDAY_COMMON_LIBRARY_OPENING,
+                        description: DNI_HOLIDAY_DESC__COMMON_LIBRARY_OPENING
+                    },
+                    dayOfDancing: {
+                        date: DNI_HOLIDAY_DAY_OF_DANCING,
+                        description: DNI_HOLIDAY_DESC__DAY_OF_DANCING
+                    },
+                    firstArrivalOfTheGreatKing: {
+                        date: DNI_HOLIDAY_FIRST_ARRIVAL_OF_THE_GREAT_KING,
+                        description: DNI_HOLIDAY_DESC__FIRST_ARRIVAL_OF_THE_GREAT_KING
+                    },
+                    coronationOfKingKerath: {
+                        date: DNI_HOLIDAY_CORONATION_OF_KING_KERATH,
+                        description: DNI_HOLIDAY_DESC__CORONATION_OF_KING_KERATH
+                    }
+                },
+                misc: {
+                    theFall: {
+                        date: THE_FALL,
+                        description: THE_FALL__DESC
+                    }
                 }
             }
         },

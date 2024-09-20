@@ -1,4 +1,10 @@
 import Big from "big.js";
+
+type ImportantDate = {
+    date: string,
+    description: string
+}
+
 export interface DniDatetimeConstantsInterface {
     controls: {
         calendarConvergence: {
@@ -128,6 +134,21 @@ export interface DniDatetimeConstantsInterface {
                 fourthTest: object,
                 fifthTest: object,
                 sixthTest: object
+            }
+        },
+        importantDates: {
+            holidays: {
+                firstFeastOfTheMaker: ImportantDate,
+                secondFeastOfTheMaker: ImportantDate,
+                thirdFeastOfTheMaker: ImportantDate,
+                newYear: ImportantDate,
+                commonLibraryOpening: ImportantDate,
+                dayOfDancing: ImportantDate,
+                firstArrivalOfTheGreatKing: ImportantDate,
+                coronationOfKingKerath: ImportantDate,
+            },
+            misc: {
+                theFall: ImportantDate
             }
         }
     }

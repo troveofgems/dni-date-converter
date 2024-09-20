@@ -10,6 +10,7 @@ import {attachLeapSecondData} from "./leap.second.lib";
 import convertSurfaceTimestampToDniCavernTimestamp, {setSurfaceTimeArtifactsByString} from "./surface.converter.lib";
 import convertCavernTimestampToSurfaceTimestamps from "./cavern.converter.lib";
 import UtilsLib from "./utils.lib";
+import {TimestampFormats} from "./timestamp.format.lib";
 
 /** Initializes the request for a DniGorahyan Object.
  *
@@ -28,7 +29,7 @@ export function init(dniGorahyan: DniGorahyan): DniGorahyan {
     dniGorahyan.converters = mountConverterMethods(dniGorahyan);
 
     // Set The Test Methods
-    dniGorahyan.tests = mountTestMethods(dniGorahyan.gorahyan);
+    dniGorahyan.tests = mountTestMethods(dniGorahyan);
 
     // Run Convergence Conversion
     const {
@@ -51,7 +52,8 @@ function setGorahyan() {
             cavern: {
                 providedTimestamps: {
                   byUser: "",
-                  fromSystem: {}
+                  fromSystem: {},
+                  outputType: 0
                 },
                 bigs: {
                         hahr: Big(0),
@@ -62,6 +64,7 @@ function setGorahyan() {
                         },
                         yahr: Big(0),
                         gahrtahvo: Big(0),
+                        pahrtahvo: Big(0),
                         tahvo: Big(0),
                         gorahn: Big(0),
                         prorahn: Big(0),
@@ -85,6 +88,7 @@ function setGorahyan() {
                         },
                         yahr: 0,
                         gahrtahvo: 0,
+                        pahrtahvo: 0,
                         tahvo: 0,
                         gorahn: 0,
                         prorahn: 0,
@@ -102,8 +106,9 @@ function setGorahyan() {
             },
             surface: {
                 providedTimestamps: {
-                  byUser: "",
-                  fromSystem: ""
+                    byUser: "",
+                    fromSystem: "",
+                    outputType: 0
                 },
                 bigs: {
                         year: Big(0),
@@ -138,6 +143,11 @@ function setGorahyan() {
                         }
                     }
             }
+        },
+        outputSettings: {
+            useDniFontMapping: false,
+            includeNthBell: true,
+            timestampFormat: TimestampFormats.troveOfGems.type_0,
         }
     };
 }
@@ -147,7 +157,7 @@ function mountConverterMethods(dniGorahyan: DniGorahyan) {
         cavernToSurface: convertCavernTimestampToSurfaceTimestamps(dniGorahyan)
     };
 }
-function mountTestMethods(gorahyan: GorahyanInterface) {
+function mountTestMethods(dniGorahyan: DniGorahyan) {
     const
         runControlTests = () => {
             const
@@ -156,7 +166,7 @@ function mountTestMethods(gorahyan: GorahyanInterface) {
                 {
                    firstControlTestValue, secondControlTestValue, thirdControlTestValue,
                    fourthControlTestValue, fifthControlTestValue, sixthControlTestValue
-                } = gorahyan.dniConstants.controls.tests;
+                } = dniGorahyan.gorahyan.dniConstants.controls.tests;
 
             // Use: Surface DateTime String
             let
@@ -185,7 +195,7 @@ function mountTestMethods(gorahyan: GorahyanInterface) {
 
             const runtimeMetrics = utils.calculateElapsedRuntimeOfControlTests(testStart, new Date());
 
-            return {
+            let generatedResults = {
                 runtimeMetrics,
                 generated: {
                     first_test_results,
@@ -196,10 +206,12 @@ function mountTestMethods(gorahyan: GorahyanInterface) {
                     sixth_test_results
                 }
             };
+
+            return dniGorahyan;
         },
         simulateCatastrophicInitFailure = () => {
             // @ts-ignore
-            gorahyan = null;
+            dniGorahyan.gorahyan = null;
             throw new Error("Class Init Failed. Unable to set methods or properties");
         }
 

@@ -1,22 +1,19 @@
+import Big from "big.js";
+
 // D'ni Gorahyan Class Interfaces
 import { GorahyanInterface } from "./interfaces/gorahyan.interface";
 import { Converters, Tests } from "./interfaces/converters.interface";
 
-// D'ni Gorahyan Main Initializer Function
+// D'ni Gorahyan Main Initializer Functions
 import { init } from "./lib/gorahyan.init.lib";
-import Big from "big.js";
-
-// Main Index File Export Wrapper
-export default function(): DniGorahyan {
-    return new DniGorahyan();
-};
+import {TimestampFormats} from "./lib/timestamp.format.lib";
 
 /**
  * DniGorahyan
  * This class represents a D'ni Clock Object and creates three (3) public interfaces for working with
  * the class.
  * */
-export class DniGorahyan {
+export default class DniGorahyan {
     /**
      * This object stores the following DateTime properties:
      * - Dni Constants, Months/Vailee, LeapSeconds and LeapEpoch Seconds
@@ -39,7 +36,26 @@ export class DniGorahyan {
     public tests!: Tests;
 
     constructor() {
+        this.printMandatoryUsageDisclaimer();
         init(this);
+    }
+
+    printMandatoryUsageDisclaimer() {
+        console.log(
+            "\n" +
+            "Software Package Notice:" + "\n\n" +
+            "Myst, and all games and books in the Myst series are registered trademarks and copyrights of Cyan " +
+            "Worlds, Inc. The concepts, settings, characters, art, and situations of the Myst series games and " +
+            "books are copyrighted by Cyan Worlds, Inc. with all rights reserved." + "\n" +
+            "I make no claims to any such rights or the intellectual properties of Cyan Worlds; nor do I intend " +
+            "to profit financially from their work. This software package is an open source fan work, and is meant solely for " +
+            "the amusement of myself and other fans of the Myst series." + "\n" +
+            "By downloading and using this software package in your own software, web pages or sites, you agree " +
+            "that you will not use this software package for profit or use this software package in any way " +
+            "that would violate Cyan World Inc.'s rights or intellectual property." + "\n\n" +
+            "- DKG: Maintainer from Guild of Maintainers\ndkgreco@thetroveofgems.tech" +
+            "\n"
+        );
     }
 
     /** Class Methods */
@@ -48,33 +64,82 @@ export class DniGorahyan {
         console.log("D'ni Readonly Constants: ", this.gorahyan.dniConstants.controls.constants.readonly);
         console.log(
             "Surface Artifacts Parsed: ",
-            this.gorahyan.timestampArtifacts.surface.providedTimestamps.byUser,
-            this.gorahyan.timestampArtifacts.surface.providedTimestamps.fromSystem,
+            this.userProvidedSurfaceTS,
+            this.systemProvidedSurfaceTS,
             this.gorahyan.timestampArtifacts.surface.readonly
         );
         console.log(
             "Cavern Artifacts Parsed: ",
-            this.gorahyan.timestampArtifacts.cavern.providedTimestamps.byUser,
-            this.gorahyan.timestampArtifacts.cavern.providedTimestamps.fromSystem,
+            this.userProvidedCavernTS,
+            this.systemProvidedCavernTS,
             this.gorahyan.timestampArtifacts.cavern.readonly
         );
     }
+    public printDniHolidays() {
+        console.log("D'ni Holidays: ", this.gorahyan.dniConstants.controls.importantDates.holidays);
+    };
+    public printDniMiscDates() {
+        console.log("D'ni Misc Dates: ", this.gorahyan.dniConstants.controls.importantDates.misc);
+    };
+    public printImportantDates() {
+        this.printDniHolidays();
+        this.printDniMiscDates();
+    };
+
+    public switchTimestampFormatter(useGoA: boolean = false, typeId: number) {
+        let defaultFormatter = TimestampFormats.troveOfGems.type_0;
+        if(useGoA) {
+            switch(typeId) {
+                case 1:
+                    this.useTimestampFormatter = TimestampFormats.guildOfArchivists.type_1;
+                    break;
+                default:
+                    this.useTimestampFormatter = TimestampFormats.guildOfArchivists.type_0;
+            }
+        } else {
+            this.useTimestampFormatter = defaultFormatter;
+        }
+    }
 
     /** User Input & System Getters/Setters */
-    set userProvidedTS(timestamp: Date | string) {
+    set userProvidedSurfaceTS(timestamp: Date | string) {
         this.gorahyan.timestampArtifacts.surface.providedTimestamps.byUser = timestamp;
     }
 
-    get userProvidedTS() {
+    get userProvidedSurfaceTS() {
         return this.gorahyan.timestampArtifacts.surface.providedTimestamps.byUser;
     }
 
-    set systemProvidedTS(timestamp: string) {
+    set systemProvidedSurfaceTS(timestamp: string) {
         this.gorahyan.timestampArtifacts.surface.providedTimestamps.fromSystem = timestamp;
     }
 
-    get systemProvidedTS() {
+    get systemProvidedSurfaceTS() {
         return this.gorahyan.timestampArtifacts.surface.providedTimestamps.fromSystem;
+    }
+
+    set userProvidedCavernTS(timestamp: string) {
+        this.gorahyan.timestampArtifacts.cavern.providedTimestamps.byUser = timestamp;
+    }
+
+    get userProvidedCavernTS() {
+        return this.gorahyan.timestampArtifacts.cavern.providedTimestamps.byUser;
+    }
+
+    set systemProvidedCavernTS(timestamps: {}) {
+        this.gorahyan.timestampArtifacts.cavern.providedTimestamps.fromSystem = timestamps;
+    }
+
+    get systemProvidedCavernTS() {
+        return this.gorahyan.timestampArtifacts.cavern.providedTimestamps.fromSystem;
+    }
+
+    set outputType(outputType: string | number) {
+        this.gorahyan.timestampArtifacts.surface.providedTimestamps.outputType = outputType;
+    }
+
+    get outputType() {
+        return this.gorahyan.timestampArtifacts.surface.providedTimestamps.outputType;
     }
 
     /** Earth DateTime Getters/Setters */
@@ -285,12 +350,20 @@ export class DniGorahyan {
         return this.gorahyan.dniConstants.controls.constants.bigs.msPerHahr;
     }
 
+    get EARTH_MS_PER_PRORAHNTEE_BIG() {
+        return this.gorahyan.dniConstants.controls.constants.bigs.msPerProrahn;
+    }
+
     get PRORAHNTEE_PER_HAHR_BIG() {
         return this.gorahyan.dniConstants.controls.constants.bigs.prorahnteePerHahr;
     }
 
     get DNI_HAHR_REFERENCE_BIG() {
         return this.gorahyan.dniConstants.controls.constants.bigs.refDniHahr;
+    }
+
+    get REF_PRORAHNTEE_PER_HAHR_BIG() {
+        return this.gorahyan.dniConstants.controls.constants.bigs.refProrahnteePerHahr;
     }
 
     get VAILEE_MIN() {
@@ -422,9 +495,43 @@ export class DniGorahyan {
     get calculatedProrahnteeDelta() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.timeDeltasCalculated.prorahnteeDelta;
     }
+
+    /** Output Settings Getters/Setters */
+    set useDniFontMapping(useDniFontMapping: boolean) {
+        this.gorahyan.outputSettings.useDniFontMapping = useDniFontMapping;
+    }
+
+    get useDniFontMapping() {
+        return this.gorahyan.outputSettings.useDniFontMapping;
+    }
+    set includeNthBell(includeNthBell: boolean) {
+        this.gorahyan.outputSettings.includeNthBell = includeNthBell;
+    }
+
+    get includeNthBell() {
+        return this.gorahyan.outputSettings.includeNthBell;
+    }
+
+    set useTimestampFormatter(timestampFormatter: Function) {
+        this.gorahyan.outputSettings.timestampFormat = timestampFormatter;
+    }
+
+    get timestampFormatter() {
+        return this.gorahyan.outputSettings.timestampFormat;
+    }
+}
+
+export function buildNewDniGorahyan(): DniGorahyan {
+    return new DniGorahyan();
 }
 
 //test.gorahyan.dniConstants.controls.calendarConvergence.earth.STRING_CONSTANT
-let test = new DniGorahyan();
-test.converters.surfaceToCavern();
-console.log(test.userProvidedTS, test.systemProvidedTS);
+let surfaceTest = new DniGorahyan();
+console.log(surfaceTest);
+surfaceTest.converters.surfaceToCavern();
+console.log(surfaceTest.userProvidedSurfaceTS, surfaceTest.systemProvidedSurfaceTS);
+
+let cavernTest = new DniGorahyan();
+console.log(cavernTest);
+cavernTest.converters.cavernToSurface("Leesahn 8 9400 DE 0:00:00:00");
+console.log(cavernTest.userProvidedCavernTS, cavernTest.systemProvidedCavernTS);

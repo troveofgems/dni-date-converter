@@ -9,7 +9,8 @@ export interface GorahyanInterface {
         cavern: {
             providedTimestamps: {
                 byUser: string,
-                fromSystem: object
+                fromSystem: object,
+                outputType: string | number
             },
             bigs: {
                 hahr: Big,
@@ -63,7 +64,8 @@ export interface GorahyanInterface {
         surface: {
             providedTimestamps: {
                 byUser: Date | string,
-                fromSystem: string
+                fromSystem: string,
+                outputType: string | number
             },
             bigs: {
                 year: Big,
@@ -98,5 +100,10 @@ export interface GorahyanInterface {
                 }
             }
         }
+    },
+    outputSettings: {
+        useDniFontMapping: boolean;
+        includeNthBell: boolean;
+        timestampFormat: Function;
     }
 }

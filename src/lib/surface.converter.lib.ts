@@ -1,11 +1,11 @@
 import Big from "big.js";
-
-import DniMonthConstants from "../constants/dni.month.constants";
+import DniGorahyan from "../index";
 
 import Utils from "./utils.lib";
 import { adjustForLeapSeconds } from "./leap.second.lib";
-import {DniGorahyan} from "../index";
 import EarthMonthConstants from "../constants/earth.month.constants";
+import DniMonthConstants from "../constants/dni.month.constants";
+
 
 /**
  * Default File Export
@@ -18,6 +18,15 @@ export default function convertSurfaceTimestampToDniCavernTimestamp(dniGorahyan:
 /**
  * Helper Exports
  * */
+export function setNthBell(pahrtahvo: number): string {
+    const bellSuperScripts = [
+        "", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
+        "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
+        "th", "st", "nd", "rd", "th", "th"
+    ];
+
+    return `${pahrtahvo}${bellSuperScripts[pahrtahvo]} Bell`;
+}
 export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahyan: DniGorahyan) {
     const
         parsedData = surfaceDateTime.split("T"),
@@ -34,7 +43,7 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahya
     
     const monthData = EarthMonthConstants.filter(item => item.id === (month - 1));
 
-    gorahyan.userProvidedTS = surfaceDateTime;
+    gorahyan.userProvidedSurfaceTS = surfaceDateTime;
     gorahyan.year = year;
     gorahyan.monthId = monthData[0].id;
     gorahyan.monthText = monthData[0].monthNameText;
@@ -55,7 +64,7 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, gorahya
 /**
  * Internal File Methods
  * */
-export function SurfaceConverterLib(gorahyan: DniGorahyan) {
+export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
     const { safeDateOperation, safeStringOperation, padValue } = Utils();
 
     const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
@@ -69,14 +78,14 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
 
         const monthData = EarthMonthConstants.filter(item => item.id === month);
 
-        gorahyan.userProvidedTS = surfaceDateTime;
-        gorahyan.year = year;
-        gorahyan.monthId = monthData[0].id;
-        gorahyan.monthText = monthData[0].monthNameText;
-        gorahyan.day = day;
-        gorahyan.hour = hours;
-        gorahyan.minute = minutes;
-        gorahyan.second = seconds;
+        dniGorahyan.userProvidedSurfaceTS = surfaceDateTime;
+        dniGorahyan.year = year;
+        dniGorahyan.monthId = monthData[0].id;
+        dniGorahyan.monthText = monthData[0].monthNameText;
+        dniGorahyan.day = day;
+        dniGorahyan.hour = hours;
+        dniGorahyan.minute = minutes;
+        dniGorahyan.second = seconds;
 
         let dt = new Date(year, month, day);
         dt.setUTCHours(hours);
@@ -84,14 +93,9 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
         dt.setUTCSeconds(seconds);
         let temp = Date.parse(dt.toISOString());
 
-        return adjustForLeapSeconds(Big(temp), gorahyan.gorahyan);
+        return adjustForLeapSeconds(Big(temp), dniGorahyan.gorahyan);
     }
-    const _convertSurfaceTimestampToCavern = function(
-        surfaceDateTime?: Date | string | null | undefined,
-        useDniFontMapping: boolean = false,
-        showNthBell: boolean = true,
-        timestampFormat: number | string = 0
-    ) {
+    const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined) {
         let // Process And Store Surface Time Artifacts
             stringPassed = typeof surfaceDateTime === "string",
             dateObjectPassed = typeof surfaceDateTime === "object",
@@ -99,103 +103,104 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
 
         if(stringPassed) {
             let safeDateTimeString = safeStringOperation(surfaceDateTime);
-            gorahyan.elapsedTimeForGivenDate = setSurfaceTimeArtifactsByString(safeDateTimeString, gorahyan);
+            dniGorahyan.elapsedTimeForGivenDate = setSurfaceTimeArtifactsByString(safeDateTimeString, dniGorahyan);
         } else if (dateObjectPassed && !nullOrUndefinedPassed) {
             let safeDateTimeObject = safeDateOperation(surfaceDateTime);
-            gorahyan.elapsedTimeForGivenDate = _setSurfaceTimeArtifactsByDateObject(safeDateTimeObject);
+            dniGorahyan.elapsedTimeForGivenDate = _setSurfaceTimeArtifactsByDateObject(safeDateTimeObject);
         } else {
-            gorahyan.elapsedTimeForGivenDate = _setSurfaceTimeArtifactsByDateObject(new Date());
+            dniGorahyan.elapsedTimeForGivenDate = _setSurfaceTimeArtifactsByDateObject(new Date());
         }
 
         let earthDeltaInMS =
-            Big(gorahyan.elapsedTimeForGivenDate)
-                .minus(Big(gorahyan.elapsedTimeAtConvergence));
+            Big(dniGorahyan.elapsedTimeForGivenDate)
+                .minus(Big(dniGorahyan.elapsedTimeAtConvergence));
 
-        gorahyan.calculatedEarthDelta = earthDeltaInMS.toNumber();
+        dniGorahyan.calculatedEarthDelta = earthDeltaInMS.toNumber();
 
         /**
         * Calculate and Store D'ni Hahrtee / Hahr Delta
         * */
         let hahr: Big | number;
-        hahr = earthDeltaInMS.div(gorahyan.EARTH_MS_PER_HAHR_BIG);
+        hahr = earthDeltaInMS.div(dniGorahyan.EARTH_MS_PER_HAHR_BIG);
         hahr = Math.floor(hahr.toNumber());
-        gorahyan.hahrtee = hahr;
+        dniGorahyan.hahrtee = hahr;
 
-        let deltaWithHahrRemoved = shiftDelta(hahr, gorahyan.HAHR_SHIFT_BIG, earthDeltaInMS, "HahrDelta");
+        let deltaWithHahrRemoved = shiftDelta(hahr, dniGorahyan.HAHR_SHIFT_BIG, earthDeltaInMS, "HahrDelta");
 
         /**
         * Convert Delta to D'ni Prorahntee For Rest of Calculations
         * */
         let
-            prorahnAdjustment = gorahyan
+            prorahnAdjustment = dniGorahyan
                 .PRORAHNTEE_PER_HAHR_BIG
-                .div(gorahyan.EARTH_MS_PER_HAHR_BIG),
+                .div(dniGorahyan.EARTH_MS_PER_HAHR_BIG),
             deltaInProrahntee = deltaWithHahrRemoved.times(prorahnAdjustment);
 
-        gorahyan.calculatedProrahnteeDelta = deltaInProrahntee.toNumber();
+        dniGorahyan.calculatedProrahnteeDelta = deltaInProrahntee.toNumber();
 
         /**
         * Calculate and Store the Vailee
         * */
-        let vaileeId: Big | number = deltaInProrahntee.div(gorahyan.VAILEE_SHIFT_BIG);
+        let vaileeId: Big | number = deltaInProrahntee.div(dniGorahyan.VAILEE_SHIFT_BIG);
         vaileeId = Math.floor(vaileeId.toNumber());
-        gorahyan.vaileetee = vaileeId;
+        dniGorahyan.vaileetee = vaileeId;
 
-        let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, gorahyan.VAILEE_SHIFT_BIG, deltaInProrahntee, "VaileeDelta");
+        let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, dniGorahyan.VAILEE_SHIFT_BIG, deltaInProrahntee, "VaileeDelta");
 
         /**
         * Calculate and Store the Yahr
         * */
-        let yahr: Big | number = prorahnteeDeltaWithVaileeRemoved.div(gorahyan.YAHR_SHIFT_BIG);
+        let yahr: Big | number = prorahnteeDeltaWithVaileeRemoved.div(dniGorahyan.YAHR_SHIFT_BIG);
         yahr = Math.floor(yahr.toNumber());
-        gorahyan.yahrtee = yahr;
+        dniGorahyan.yahrtee = yahr;
 
-        let prorahnteeDeltaWithYahrRemoved = shiftDelta(yahr, gorahyan.YAHR_SHIFT_BIG, prorahnteeDeltaWithVaileeRemoved, "YahrDelta");
+        let prorahnteeDeltaWithYahrRemoved = shiftDelta(yahr, dniGorahyan.YAHR_SHIFT_BIG, prorahnteeDeltaWithVaileeRemoved, "YahrDelta");
 
         /**
         * Calculate and Store the Gahrtahvo
         * */
-        let gahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(gorahyan.GAHRTAHVO_SHIFT_BIG);
+        let gahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(dniGorahyan.GAHRTAHVO_SHIFT_BIG);
         gahrtahvo = Math.floor(gahrtahvo.toNumber());
-        gorahyan.gahrtahvotee = gahrtahvo;
+        dniGorahyan.gahrtahvotee = gahrtahvo;
 
-        let prorahnteeDeltaWithGartahvoRemoved = shiftDelta(gahrtahvo, gorahyan.GAHRTAHVO_SHIFT_BIG, prorahnteeDeltaWithYahrRemoved, "GahrtahvoDelta");
+        let prorahnteeDeltaWithGartahvoRemoved = shiftDelta(gahrtahvo, dniGorahyan.GAHRTAHVO_SHIFT_BIG, prorahnteeDeltaWithYahrRemoved, "GahrtahvoDelta");
 
         /**
          * Calculate and Store the Pahrtahvo
          * */
-        let pahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(gorahyan.PAHRTAHVO_SHIFT_BIG);
+        let pahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(dniGorahyan.PAHRTAHVO_SHIFT_BIG);
         pahrtahvo = Math.floor(pahrtahvo.toNumber());
-        gorahyan.pahrtahvotee = pahrtahvo;
+        dniGorahyan.pahrtahvotee = pahrtahvo;
 
         /**
         * Calculate and Store the Tahvo
         * */
-        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved.div(gorahyan.TAHVO_SHIFT_BIG);
+        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved.div(dniGorahyan.TAHVO_SHIFT_BIG);
         tahvo = Math.floor(tahvo.toNumber());
-        gorahyan.tahvotee = tahvo;
+        dniGorahyan.tahvotee = tahvo;
 
-        let prorahnteeDeltaWithTahvoRemoved = shiftDelta(tahvo, gorahyan.TAHVO_SHIFT_BIG, prorahnteeDeltaWithGartahvoRemoved, "TahvoDelta");
+        let prorahnteeDeltaWithTahvoRemoved = shiftDelta(tahvo, dniGorahyan.TAHVO_SHIFT_BIG, prorahnteeDeltaWithGartahvoRemoved, "TahvoDelta");
 
         /**
         * Calculate and Store the Gorahn
         * */
-        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(gorahyan.GORAHN_SHIFT_BIG);
+        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(dniGorahyan.GORAHN_SHIFT_BIG);
         gorahn = Math.floor(gorahn.toNumber());
-        gorahyan.gorahntee = gorahn;
+        dniGorahyan.gorahntee = gorahn;
 
-        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, gorahyan.GORAHN_SHIFT_BIG, prorahnteeDeltaWithTahvoRemoved, "GorahnDelta");
+        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, dniGorahyan.GORAHN_SHIFT_BIG, prorahnteeDeltaWithTahvoRemoved, "GorahnDelta");
 
         /**
         * Calculate and Store the Prorahn
         * */
-        gorahyan.prorahntee = Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber());
+        dniGorahyan.prorahntee = Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber());
 
         /**
         * Adjust All Calculated Times As Needed And Return Final TS Value
         * */
         adjustCalculatedTimes();
-        return _getDniConvertedTimestamp(useDniFontMapping);
+        setDniConvertedTimestamp();
+        return dniGorahyan;
     }
 
     const shiftDelta = function(dniUnit: number, dniUnitShift: Big, currentDelta: Big, shiftFor: string): Big {
@@ -204,7 +209,7 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
             remainingDelta: Big | number = currentDelta.minus(deltaShiftValueToRemove);
 
         // @ts-ignore
-        gorahyan[`calculated${shiftFor}`] = remainingDelta.toNumber();
+        dniGorahyan[`calculated${shiftFor}`] = remainingDelta.toNumber();
 
         return remainingDelta;
     }
@@ -228,7 +233,7 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
         }
 
         if(adjustsFor === "vailee") {
-            gorahyan.vaileetee = Big(gorahyan.vaileetee)
+            dniGorahyan.vaileetee = Big(dniGorahyan.vaileetee)
                 .plus(adjustment)
                 .toNumber();
         } else {
@@ -240,23 +245,23 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
     }
     const adjustTimeValue = function(unitOfTime: string) {
         while ((
-                (unitOfTime === "vailee" && gorahyan.vaileetee > gorahyan.VAILEE_MAX) ||
-                (unitOfTime === "vailee" && gorahyan.vaileetee < gorahyan.VAILEE_MIN)
+                (unitOfTime === "vailee" && dniGorahyan.vaileetee > dniGorahyan.VAILEE_MAX) ||
+                (unitOfTime === "vailee" && dniGorahyan.vaileetee < dniGorahyan.VAILEE_MIN)
             ) || (
                 // @ts-ignore
-                unitOfTime !== "vailee" && gorahyan[`${unitOfTime}tee`] > gorahyan[`${unitOfTime.toUpperCase()}_MAX`]  ||
+                unitOfTime !== "vailee" && dniGorahyan[`${unitOfTime}tee`] > dniGorahyan[`${unitOfTime.toUpperCase()}_MAX`]  ||
                 // @ts-ignore
-                unitOfTime !== "vailee" && gorahyan[`${unitOfTime}tee`] < gorahyan[`${unitOfTime.toUpperCase()}_MIN`]
+                unitOfTime !== "vailee" && dniGorahyan[`${unitOfTime}tee`] < dniGorahyan[`${unitOfTime.toUpperCase()}_MIN`]
             )) {
 
             let // @ts-ignore
-                minValue = gorahyan[`${unitOfTime.toUpperCase()}_MIN`],
+                minValue = dniGorahyan[`${unitOfTime.toUpperCase()}_MIN`],
                 // @ts-ignore
-                maxValue = gorahyan[`${unitOfTime.toUpperCase()}_MAX`],
+                maxValue = dniGorahyan[`${unitOfTime.toUpperCase()}_MAX`],
                 currentValue: number = (unitOfTime === "vailee") ?
-                    gorahyan.vaileetee :
+                    dniGorahyan.vaileetee :
                     // @ts-ignore
-                    gorahyan[`${unitOfTime}tee`];
+                    dniGorahyan[`${unitOfTime}tee`];
 
             let adjustedValue = 0;
 
@@ -268,7 +273,7 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
             }
 
             if(unitOfTime === "vailee") {
-                gorahyan.vaileetee = Big(gorahyan.vaileetee)
+                dniGorahyan.vaileetee = Big(dniGorahyan.vaileetee)
                     .plus(adjustedValue)
                     .toNumber();
             } else {
@@ -304,60 +309,32 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
     const finalCalendarAdjustments = function() {
         // Final Calendar Adjustments
         // Always Increment Hahr By 9647 After Date Conversion
-        gorahyan.hahrtee = Big(gorahyan.hahrtee)
-            .plus(gorahyan.DNI_HAHR_REFERENCE_BIG)
+        dniGorahyan.hahrtee = Big(dniGorahyan.hahrtee)
+            .plus(dniGorahyan.DNI_HAHR_REFERENCE_BIG)
             .toNumber();
 
         // Always Increment Pahrtahvo By 1 After Date Conversion
-        gorahyan.pahrtahvotee = Big(gorahyan.pahrtahvotee)
+        dniGorahyan.pahrtahvotee = Big(dniGorahyan.pahrtahvotee)
             .plus(1)
             .toNumber();
 
         // Always Increment Yahr By 1 After Date Conversion
-        gorahyan.yahrtee = Big(gorahyan.yahrtee)
+        dniGorahyan.yahrtee = Big(dniGorahyan.yahrtee)
             .plus(1)
             .toNumber();
     }
 
-    const _getDniConvertedTimestamp = function(useDniFontMapping: boolean = false) {
-        let
-            constructedDate = "",
-            constructedTime = "",
-            constructedBell = _getNthBell(gorahyan.pahrtahvotee),
-            paddedTahvo = padValue(gorahyan.tahvotee),
-            paddedGorahn = padValue(gorahyan.gorahntee),
-            paddedProrahn = padValue(gorahyan.prorahntee),
-            dateIsBE = gorahyan.hahrtee < 0,
-            resolvedVaileeText = useDniFontMapping ? gorahyan.vaileeDniFontMappingName : gorahyan.vaileeTextName
-
-        if(dateIsBE) {
-            constructedDate = resolvedVaileeText + " " + gorahyan.yahrtee + " " + (gorahyan.hahrtee * -1) + " BE ";
-            constructedTime = gorahyan.gahrtahvotee + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn;
-        } else {
-            constructedDate = resolvedVaileeText + " " + gorahyan.yahrtee + " " + gorahyan.hahrtee + " DE ";
-            constructedTime = gorahyan.gahrtahvotee + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn;
-        }
-
-        gorahyan.systemProvidedTS = `${constructedDate}${constructedTime} - ${constructedBell}`;
-        return gorahyan;
-    }
-
-    const _getNthBell = function(pahrtahvo: number): string {
-        const bellSuperScripts = [
-            "", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-            "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
-            "th", "st", "nd", "rd", "th", "th"
-        ];
-
-        return `${pahrtahvo}${bellSuperScripts[pahrtahvo]} Bell`;
+    const setDniConvertedTimestamp = function() {
+        dniGorahyan.systemProvidedSurfaceTS = dniGorahyan.timestampFormatter(dniGorahyan);
+        return dniGorahyan;
     }
 
     const setFullVaileeData = function() {
         try {
-            let data = DniMonthConstants[gorahyan.vaileetee];
+            let data = DniMonthConstants[dniGorahyan.vaileetee];
 
-            gorahyan.vaileeTextName = data.vaileeNameText;
-            gorahyan.vaileeDniFontMappingName = data.dniFontVaileeNameText;
+            dniGorahyan.vaileeTextName = data.vaileeNameText;
+            dniGorahyan.vaileeDniFontMappingName = data.dniFontVaileeNameText;
         } catch(err) {
             throw new Error("Vailee Parse Failed. Unable To Continue Date Conversion. Check the error console for more details.");
         }
@@ -367,8 +344,8 @@ export function SurfaceConverterLib(gorahyan: DniGorahyan) {
         convertSurfaceTimestampToCavern: _convertSurfaceTimestampToCavern,
         tests: {
             setFullVaileeData,
-            getDniConvertedTimestamp: _getDniConvertedTimestamp,
-            adjustTimeValue: adjustTimeValue,
+            setDniConvertedTimestamp,
+            adjustTimeValue,
             subAdjustment: _subAdjustment
         }
     }

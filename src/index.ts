@@ -6,7 +6,6 @@ import { Converters, Tests } from "./interfaces/converters.interface";
 
 // D'ni Gorahyan Main Initializer Functions
 import { init } from "./lib/gorahyan.init.lib";
-import {TimestampFormats} from "./lib/timestamp.format.lib";
 
 /**
  * DniGorahyan
@@ -75,30 +74,29 @@ export default class DniGorahyan {
             this.gorahyan.timestampArtifacts.cavern.readonly
         );
     }
+    public printImportantDates(
+        all = true,
+        holidaysOnly = false,
+        miscDatesOnly = false
+    ) {
+        if(all) {
+            this.printDniHolidays();
+            this.printDniMiscDates();
+        } else if(holidaysOnly) {
+            this.printDniHolidays();
+        } else if(miscDatesOnly) {
+            this.printDniMiscDates();
+        }
+    }
     public printDniHolidays() {
         console.log("D'ni Holidays: ", this.gorahyan.dniConstants.controls.importantDates.holidays);
     };
     public printDniMiscDates() {
         console.log("D'ni Misc Dates: ", this.gorahyan.dniConstants.controls.importantDates.misc);
     };
-    public printImportantDates() {
-        this.printDniHolidays();
-        this.printDniMiscDates();
-    };
 
-    public switchTimestampFormatter(useGoA: boolean = false, typeId: number) {
-        let defaultFormatter = TimestampFormats.troveOfGems.type_0;
-        if(useGoA) {
-            switch(typeId) {
-                case 1:
-                    this.useTimestampFormatter = TimestampFormats.guildOfArchivists.type_1;
-                    break;
-                default:
-                    this.useTimestampFormatter = TimestampFormats.guildOfArchivists.type_0;
-            }
-        } else {
-            this.useTimestampFormatter = defaultFormatter;
-        }
+    public switchTimestampFormatter(typeId: number) {
+        this.outputType = typeId;
     }
 
     /** User Input & System Getters/Setters */
@@ -126,7 +124,7 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.cavern.providedTimestamps.byUser;
     }
 
-    set systemProvidedCavernTS(timestamps: {}) {
+    set systemProvidedCavernTS(timestamps: { utc: string, cavern: string, local: string }) {
         this.gorahyan.timestampArtifacts.cavern.providedTimestamps.fromSystem = timestamps;
     }
 
@@ -134,7 +132,7 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.cavern.providedTimestamps.fromSystem;
     }
 
-    set outputType(outputType: string | number) {
+    set outputType(outputType: number) {
         this.gorahyan.timestampArtifacts.surface.providedTimestamps.outputType = outputType;
     }
 
@@ -142,12 +140,15 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.surface.providedTimestamps.outputType;
     }
 
-    /** Earth DateTime Getters/Setters */
-    set year(year: number) {
-        this.gorahyan.timestampArtifacts.surface.bigs.year = Big(year);
-        this.gorahyan.timestampArtifacts.surface.readonly.year = year;
+    /** Dni & Earth Date/Time Fragment Setter */
+    set timeFragment(timeFragment: { type: string, value: number, source: string }) {
+        // @ts-ignore
+        this.gorahyan.timestampArtifacts[timeFragment.source].bigs[timeFragment.type] = Big(timeFragment.value);
+        // @ts-ignore
+        this.gorahyan.timestampArtifacts[timeFragment.source].readonly[timeFragment.type] = timeFragment.value;
     }
 
+    /** Earth DateTime Getters */
     get year() {
         return this.gorahyan.timestampArtifacts.surface.readonly.year;
     }
@@ -170,36 +171,16 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.surface.readonly.month.text;
     }
 
-    set day(day: number) {
-        this.gorahyan.timestampArtifacts.surface.bigs.day = Big(day);
-        this.gorahyan.timestampArtifacts.surface.readonly.day = day;
-    }
-
     get day() {
         return this.gorahyan.timestampArtifacts.surface.readonly.day;
-    }
-
-    set hour(hour: number) {
-        this.gorahyan.timestampArtifacts.surface.bigs.hour = Big(hour);
-        this.gorahyan.timestampArtifacts.surface.readonly.hour = hour;
     }
 
     get hour() {
         return this.gorahyan.timestampArtifacts.surface.readonly.hour;
     }
 
-    set minute(minute: number) {
-        this.gorahyan.timestampArtifacts.surface.bigs.hour = Big(minute);
-        this.gorahyan.timestampArtifacts.surface.readonly.hour = minute;
-    }
-
     get minute() {
         return this.gorahyan.timestampArtifacts.surface.readonly.minute;
-    }
-
-    set second(second: number) {
-        this.gorahyan.timestampArtifacts.surface.bigs.second = Big(second);
-        this.gorahyan.timestampArtifacts.surface.readonly.second = second;
     }
 
     get second() {
@@ -209,11 +190,6 @@ export default class DniGorahyan {
     /** D'ni DateTime Getters/Setters */
     get hahrtee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.hahr;
-    }
-
-    set hahrtee(hahr: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.hahr = Big(hahr);
-        this.gorahyan.timestampArtifacts.cavern.readonly.hahr = hahr;
     }
 
     get vaileetee() {
@@ -247,54 +223,24 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.cavern.readonly.yahr;
     }
 
-    set yahrtee(yahr: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.yahr = Big(yahr);
-        this.gorahyan.timestampArtifacts.cavern.readonly.yahr = yahr;
-    }
-
     get gahrtahvotee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.gahrtahvo;
-    }
-
-    set gahrtahvotee(gahrtahvo: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.gahrtahvo = Big(gahrtahvo);
-        this.gorahyan.timestampArtifacts.cavern.readonly.gahrtahvo = gahrtahvo;
     }
 
     get pahrtahvotee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.pahrtahvo;
     }
 
-    set pahrtahvotee(pahrtahvo: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.pahrtahvo = Big(pahrtahvo);
-        this.gorahyan.timestampArtifacts.cavern.readonly.pahrtahvo = pahrtahvo;
-    }
-
     get tahvotee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.tahvo;
-    }
-
-    set tahvotee(tahvo: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.tahvo = Big(tahvo);
-        this.gorahyan.timestampArtifacts.cavern.readonly.tahvo = tahvo;
     }
 
     get gorahntee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.gorahn;
     }
 
-    set gorahntee(gorahn: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.gorahn = Big(gorahn);
-        this.gorahyan.timestampArtifacts.cavern.readonly.gorahn = gorahn;
-    }
-
     get prorahntee() {
         return this.gorahyan.timestampArtifacts.cavern.readonly.prorahn;
-    }
-
-    set prorahntee(prorahn: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.prorahn = Big(prorahn);
-        this.gorahyan.timestampArtifacts.cavern.readonly.prorahn = prorahn;
     }
 
     /** Elapsed Time Since Convergence & User Inputted Dates Getters/Setters */
@@ -512,12 +458,65 @@ export default class DniGorahyan {
         return this.gorahyan.outputSettings.includeNthBell;
     }
 
-    set useTimestampFormatter(timestampFormatter: Function) {
-        this.gorahyan.outputSettings.timestampFormat = timestampFormatter;
+    /** Control Tests Getters/Setters */
+    set nthControlTestResult(results: { testResult: string, testNumber: string }) {
+        // @ts-ignore
+        this.gorahyan.dniConstants.controls.tests.results[`${results.testNumber}Test`] = results.testResult;
     }
 
-    get timestampFormatter() {
-        return this.gorahyan.outputSettings.timestampFormat;
+    get firstControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.firstTest;
+    }
+
+    get secondControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.secondTest;
+    }
+
+    get thirdControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.thirdTest;
+    }
+
+    get fourthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.fourthTest;
+    }
+
+    get fifthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.fifthTest;
+    }
+
+    get sixthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.sixthTest;
+    }
+
+    get seventhControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.seventhTest;
+    }
+
+    get eighthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.eighthTest;
+    }
+
+    get ninthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.ninthTest;
+    }
+
+    get tenthControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.tenthTest;
+    }
+
+    get eleventhControlTestResult() {
+        return this.gorahyan.dniConstants.controls.tests.results.eleventhTest;
+    }
+
+    set runtimeMetrics(runtimeMetrics: {
+        elapsedTimeMessage: string; elapsedTimeInMS: number;
+        hours: number; minutes: number; seconds: number;
+    }) {
+        this.gorahyan.dniConstants.controls.tests.results.runtimeMetrics = runtimeMetrics;
+    }
+
+    get runtimeMetrics() {
+        return this.gorahyan.dniConstants.controls.tests.results.runtimeMetrics;
     }
 }
 
@@ -525,13 +524,5 @@ export function buildNewDniGorahyan(): DniGorahyan {
     return new DniGorahyan();
 }
 
-//test.gorahyan.dniConstants.controls.calendarConvergence.earth.STRING_CONSTANT
-let surfaceTest = new DniGorahyan();
-console.log(surfaceTest);
-surfaceTest.converters.surfaceToCavern();
-console.log(surfaceTest.userProvidedSurfaceTS, surfaceTest.systemProvidedSurfaceTS);
-
-let cavernTest = new DniGorahyan();
-console.log(cavernTest);
-cavernTest.converters.cavernToSurface("Leesahn 8 9400 DE 0:00:00:00");
-console.log(cavernTest.userProvidedCavernTS, cavernTest.systemProvidedCavernTS);
+/*let test = new DniGorahyan();
+test.tests.runControlTests();*/

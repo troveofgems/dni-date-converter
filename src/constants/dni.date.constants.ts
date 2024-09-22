@@ -141,32 +141,6 @@ export default function DniGorahyanConstants(): DniDatetimeConstantsInterface {
                     }
                 }
             },
-            generated: {
-                artifacts: {
-                    sourceTimestamp: "",
-                    timestampConvertedTo: ""
-                },
-                bigs: {
-                    hahrtee: Big(0),
-                    vaileetee: Big(0),
-                    yahrtee: Big(0),
-                    gahrtahvotee: Big(0),
-                    pahrtahvotee: Big(0),
-                    tahvotee: Big(0),
-                    gorahntee: Big(0),
-                    prorahntee: Big(0)
-                },
-                readonly: {
-                    hahrtee: 0,
-                    vaileetee: 0,
-                    yahrtee: 0,
-                    gahrtahvotee: 0,
-                    pahrtahvotee: 0,
-                    tahvotee: 0,
-                    gorahntee: 0,
-                    prorahntee: 0
-                }
-            },
             tests: {
                 firstControlTestValue: FIRST_CONTROL_TEST_VALUE,
                 secondControlTestValue: SECOND_CONTROL_TEST_VALUE,
@@ -187,7 +161,13 @@ export default function DniGorahyanConstants(): DniDatetimeConstantsInterface {
                     thirdTest: "",
                     fourthTest: {},
                     fifthTest: {},
-                    sixthTest: {}
+                    sixthTest: {},
+                    seventhTest: "",
+                    eighthTest: "",
+                    ninthTest: "",
+                    tenthTest: "",
+                    eleventhTest: "",
+                    twelfthTest: "",
                 }
             },
             importantDates: {

@@ -87,32 +87,6 @@ export interface DniDatetimeConstantsInterface {
                 }
             }
         },
-        generated: {
-            artifacts: {
-                sourceTimestamp: string,
-                timestampConvertedTo: string
-            },
-            bigs: {
-                hahrtee: Big,
-                vaileetee: Big,
-                yahrtee: Big,
-                gahrtahvotee: Big,
-                pahrtahvotee: Big,
-                tahvotee: Big,
-                gorahntee: Big,
-                prorahntee: Big
-            },
-            readonly: {
-                hahrtee: number,
-                vaileetee: number,
-                yahrtee: number,
-                gahrtahvotee: number,
-                pahrtahvotee: number,
-                tahvotee: number,
-                gorahntee: number,
-                prorahntee: number
-            }
-        },
         tests: {
             firstControlTestValue: string, // surfaceToCavern(string)
             secondControlTestValue: Date, // surfaceToCavern(Date{})
@@ -133,7 +107,13 @@ export interface DniDatetimeConstantsInterface {
                 thirdTest: string,
                 fourthTest: object,
                 fifthTest: object,
-                sixthTest: object
+                sixthTest: object,
+                seventhTest: string,
+                eighthTest: string,
+                ninthTest: string,
+                tenthTest: string,
+                eleventhTest: string,
+                twelthTest: string
             }
         },
         importantDates: {

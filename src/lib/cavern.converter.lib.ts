@@ -34,13 +34,37 @@ function setCavernTimeArtifactsByString(cavernDateTime: string, dniGorahyan: Dni
         gorahn      = parseInt(requestedTime[2]),
         prorahn     = parseInt(requestedTime[3]);
 
-    dniGorahyan.hahrtee = hahr;
+    dniGorahyan.timeFragment = {
+        type: "hahr",
+        value: hahr,
+        source: "cavern"
+    };
     dniGorahyan.vaileetee = vailee;
-    dniGorahyan.yahrtee = yahr;
-    dniGorahyan.gahrtahvotee = gahrtahvo;
-    dniGorahyan.tahvotee = tahvo;
-    dniGorahyan.gorahntee = gorahn;
-    dniGorahyan.prorahntee = prorahn;
+    dniGorahyan.timeFragment = {
+        type: "yahr",
+        value: yahr,
+        source: "cavern"
+    };
+    dniGorahyan.timeFragment = {
+        type: "gahrtahvo",
+        value: gahrtahvo,
+        source: "cavern"
+    };
+    dniGorahyan.timeFragment = {
+        type: "tahvo",
+        value: tahvo,
+        source: "cavern"
+    };
+    dniGorahyan.timeFragment = {
+        type: "gorahn",
+        value: gorahn,
+        source: "cavern"
+    };
+    dniGorahyan.timeFragment = {
+        type: "prorahn",
+        value: prorahn,
+        source: "cavern"
+    };
 }
 
 /**

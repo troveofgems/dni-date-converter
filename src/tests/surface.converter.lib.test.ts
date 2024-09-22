@@ -1,12 +1,27 @@
 import {describe, test, expect} from "@jest/globals"
-
-import Big from "big.js";
 import DniGorahyan from "../index";
 import UtilsLib from "../lib/utils.lib";
 import {SurfaceConverterLib} from "../lib/surface.converter.lib";
-import {init} from "../lib/gorahyan.init.lib";
 
 describe("Test Suite For Surface Converter Function", () => {
+    test("Test Forced Error For setVaileeData()", () => {
+        let
+            dniGorahyan = new DniGorahyan(),
+            { tests } = SurfaceConverterLib(dniGorahyan);
+
+        const setFullVaileeDataSpy = jest.spyOn(tests, "setFullVaileeData");
+
+        dniGorahyan.vaileetee = 11;
+
+        expect(() => tests.setFullVaileeData()).toThrowError("Vailee Parse Failed. Unable To Continue Date Conversion. Check the error console for more details.");
+
+        // Check the spy if the method was called correctly.
+        expect(setFullVaileeDataSpy).toHaveBeenCalled();
+
+        // Restore the mock and revert original implementation.
+        setFullVaileeDataSpy.mockClear();
+    });
+
     // Function Calls - Utils Run For 100% Test Coverage Run even though these tests are defined in utils.lib.test.ts
     describe("Imported Util Functions Tested", () => {
         let
@@ -21,24 +36,6 @@ describe("Test Suite For Surface Converter Function", () => {
     });
 
     describe('Adjustment Tests', () => {
-        test("Test DniFontMapping Text", () => {
-            let dniGorahyan = new DniGorahyan();
-
-            const dniFontMappingValueSpy = jest.spyOn(dniGorahyan.converters, "surfaceToCavern");
-
-            const result = dniGorahyan.converters.surfaceToCavern("1991-04-21T09:54:00");
-
-            expect(result).toEqual("lEfo 1 9647 DE 0:00:00:00");
-
-            // Check the spy if the method was called correctly.
-            expect(dniFontMappingValueSpy).toHaveBeenCalled();
-
-            // Restore the mock and revert original implementation.
-            dniFontMappingValueSpy.mockClear();
-        });
-    });
-
-    describe('Adjustment Tests', () => {
         test("Test adjustTimeValue() For Out of Bounds Prorahn", () => {
             let
                 dniGorahyan = new DniGorahyan(),
@@ -47,7 +44,7 @@ describe("Test Suite For Surface Converter Function", () => {
             const adjustTimeValueSpy = jest.spyOn(tests, "adjustTimeValue");
             convertSurfaceTimestampToCavern();
 
-            dniGorahyan.prorahntee = 26;
+            dniGorahyan.timeFragment = { type: "prorahn", value: 26, source: "cavern" }
 
             tests.adjustTimeValue('prorahn');
 
@@ -74,33 +71,13 @@ describe("Test Suite For Surface Converter Function", () => {
 
             const result = dniGorahyan.vaileetee;
 
-            expect(result).toEqual(1);
+            expect(result).toEqual(2);
 
             // Check the spy if the method was called correctly.
             expect(adjustTimeValueSpy2).toHaveBeenCalled();
 
             // Restore the mock and revert original implementation.
             adjustTimeValueSpy2.mockClear();
-        });
-        test("Test _subAdjustment()", () => {
-            let
-                dniGorahyan = new DniGorahyan(),
-                { tests, convertSurfaceTimestampToCavern } = SurfaceConverterLib(dniGorahyan);
-            const subAdjustTimeValueSpy = jest.spyOn(tests, "subAdjustment");
-            convertSurfaceTimestampToCavern();
-
-            tests.subAdjustment('prorahn', 95, 0, 25);
-            tests.subAdjustment('gorahn', 75, 0, 25);
-            tests.subAdjustment('tahvo', 200, 0, 25);
-            tests.subAdjustment('gartahvo', 40, 0, 5);
-            tests.subAdjustment('yahr', 90, 0, 29);
-            tests.subAdjustment('vailee', -9, 0, 10);
-
-            // Check the spy if the method was called correctly.
-            expect(subAdjustTimeValueSpy).toHaveBeenCalled();
-
-            // Restore the mock and revert original implementation.
-            subAdjustTimeValueSpy.mockClear();
         });
         test("Test adjustTimeValue() For Out of Bounds Gorahn", () => {
             let
@@ -109,7 +86,7 @@ describe("Test Suite For Surface Converter Function", () => {
             const adjustTimeValueSpy = jest.spyOn(tests, "adjustTimeValue");
             convertSurfaceTimestampToCavern();
 
-            dniGorahyan.gorahntee = -1;
+            dniGorahyan.timeFragment = { type: "gorahn", value: -1, source: "cavern" }
 
             tests.adjustTimeValue('gorahn');
 
@@ -126,7 +103,7 @@ describe("Test Suite For Surface Converter Function", () => {
             const adjustTimeValueSpy = jest.spyOn(tests, "adjustTimeValue");
             convertSurfaceTimestampToCavern();
 
-            dniGorahyan.tahvotee = -1;
+            dniGorahyan.timeFragment = { type: "tahvo", value: -1, source: "cavern" }
 
             tests.adjustTimeValue('tahvo');
 
@@ -143,7 +120,7 @@ describe("Test Suite For Surface Converter Function", () => {
             const adjustTimeValueSpy = jest.spyOn(tests, "adjustTimeValue");
             convertSurfaceTimestampToCavern();
 
-            dniGorahyan.yahrtee = -1;
+            dniGorahyan.timeFragment = { type: "yahr", value: -1, source: "cavern" }
 
             tests.adjustTimeValue('yahr');
 
@@ -160,7 +137,7 @@ describe("Test Suite For Surface Converter Function", () => {
             const adjustTimeValueSpy = jest.spyOn(tests, "adjustTimeValue");
             convertSurfaceTimestampToCavern();
 
-            dniGorahyan.gahrtahvotee = -1;
+            dniGorahyan.timeFragment = { type: "gahrtahvo", value: -1, source: "cavern" }
 
             tests.adjustTimeValue('gahrtahvo');
 

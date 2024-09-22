@@ -6,6 +6,8 @@ import { adjustForLeapSeconds } from "./leap.second.lib";
 import EarthMonthConstants from "../constants/earth.month.constants";
 import DniMonthConstants from "../constants/dni.month.constants";
 
+import { TimestampFormatLoaders } from "./timestamp.format.lib";
+
 
 /**
  * Default File Export
@@ -25,7 +27,7 @@ export function setNthBell(pahrtahvo: number): string {
         "th", "st", "nd", "rd", "th", "th"
     ];
 
-    return `${pahrtahvo}${bellSuperScripts[pahrtahvo]} Bell`;
+    return `${pahrtahvo}${bellSuperScripts[pahrtahvo]}`;
 }
 export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, dniGorahyan: DniGorahyan) {
     const
@@ -44,13 +46,33 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, dniGora
     const monthData = EarthMonthConstants.filter(item => item.id === (month - 1));
 
     dniGorahyan.userProvidedSurfaceTS = surfaceDateTime;
-    dniGorahyan.year = year;
+    dniGorahyan.timeFragment = {
+        type: "year",
+        value: year,
+        source: "surface"
+    };
     dniGorahyan.monthId = monthData[0].id;
     dniGorahyan.monthText = monthData[0].monthNameText;
-    dniGorahyan.day = day;
-    dniGorahyan.hour = hour;
-    dniGorahyan.minute = minute;
-    dniGorahyan.second = second;
+    dniGorahyan.timeFragment = {
+        type: "day",
+        value: day,
+        source: "surface"
+    };
+    dniGorahyan.timeFragment = {
+        type: "hour",
+        value: hour,
+        source: "surface"
+    };;
+    dniGorahyan.timeFragment = {
+        type: "minute",
+        value: minute,
+        source: "surface"
+    };;
+    dniGorahyan.timeFragment = {
+        type: "second",
+        value: second,
+        source: "surface"
+    };;
 
     let dt = new Date(year, month - 1, day);
     dt.setUTCHours(hour);
@@ -65,36 +87,6 @@ export function setSurfaceTimeArtifactsByString(surfaceDateTime: string, dniGora
  * Internal File Methods
  * */
 export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
-    const { safeDateOperation, safeStringOperation, padValue } = Utils();
-
-    const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
-        const
-            year = surfaceDateTime.getUTCFullYear(),
-            month = surfaceDateTime.getMonth(),
-            day = surfaceDateTime.getDate(),
-            hours = surfaceDateTime.getHours(),
-            minutes = surfaceDateTime.getMinutes(),
-            seconds = surfaceDateTime.getSeconds();
-
-        const monthData = EarthMonthConstants.filter(item => item.id === month);
-
-        dniGorahyan.userProvidedSurfaceTS = surfaceDateTime;
-        dniGorahyan.year = year;
-        dniGorahyan.monthId = monthData[0].id;
-        dniGorahyan.monthText = monthData[0].monthNameText;
-        dniGorahyan.day = day;
-        dniGorahyan.hour = hours;
-        dniGorahyan.minute = minutes;
-        dniGorahyan.second = seconds;
-
-        let dt = new Date(year, month, day);
-        dt.setUTCHours(hours);
-        dt.setUTCMinutes(minutes + (7 * 60));
-        dt.setUTCSeconds(seconds);
-        let temp = Date.parse(dt.toISOString());
-
-        return adjustForLeapSeconds(Big(temp), dniGorahyan.gorahyan);
-    }
     const _convertSurfaceTimestampToCavern = function(surfaceDateTime?: Date | string | null | undefined) {
         let // Process And Store Surface Time Artifacts
             stringPassed = typeof surfaceDateTime === "string",
@@ -118,18 +110,17 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
         dniGorahyan.calculatedEarthDelta = earthDeltaInMS.toNumber();
 
         /**
-        * Calculate and Store D'ni Hahrtee / Hahr Delta
-        * */
-        let hahr: Big | number;
-        hahr = earthDeltaInMS.div(dniGorahyan.EARTH_MS_PER_HAHR_BIG);
-        hahr = Math.floor(hahr.toNumber());
-        dniGorahyan.hahrtee = hahr;
-
-        let deltaWithHahrRemoved = shiftDelta(hahr, dniGorahyan.HAHR_SHIFT_BIG, earthDeltaInMS, "HahrDelta");
+         * Calculate and Store D'ni Hahrtee / Hahr Delta
+         * */
+        let deltaWithHahrRemoved = storeAndShiftDniTimeFragment(
+            earthDeltaInMS,
+            dniGorahyan.EARTH_MS_PER_HAHR_BIG,
+            { type: "hahr", source: "cavern" }
+        );
 
         /**
-        * Convert Delta to D'ni Prorahntee For Rest of Calculations
-        * */
+         * Convert Delta to D'ni Prorahntee For Rest of Calculations
+         * */
         let
             prorahnAdjustment = dniGorahyan
                 .PRORAHNTEE_PER_HAHR_BIG
@@ -139,70 +130,141 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
         dniGorahyan.calculatedProrahnteeDelta = deltaInProrahntee.toNumber();
 
         /**
-        * Calculate and Store the Vailee
-        * */
+         * Calculate and Store the Vailee
+         * */
         let vaileeId: Big | number = deltaInProrahntee.div(dniGorahyan.VAILEE_SHIFT_BIG);
         vaileeId = Math.floor(vaileeId.toNumber());
-        dniGorahyan.vaileetee = vaileeId;
 
-        let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, dniGorahyan.VAILEE_SHIFT_BIG, deltaInProrahntee, "VaileeDelta");
-
-        /**
-        * Calculate and Store the Yahr
-        * */
-        let yahr: Big | number = prorahnteeDeltaWithVaileeRemoved.div(dniGorahyan.YAHR_SHIFT_BIG);
-        yahr = Math.floor(yahr.toNumber());
-        dniGorahyan.yahrtee = yahr;
-
-        let prorahnteeDeltaWithYahrRemoved = shiftDelta(yahr, dniGorahyan.YAHR_SHIFT_BIG, prorahnteeDeltaWithVaileeRemoved, "YahrDelta");
+        let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, dniGorahyan.VAILEE_SHIFT_BIG, deltaInProrahntee, "vailee");
 
         /**
-        * Calculate and Store the Gahrtahvo
-        * */
-        let gahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(dniGorahyan.GAHRTAHVO_SHIFT_BIG);
-        gahrtahvo = Math.floor(gahrtahvo.toNumber());
-        dniGorahyan.gahrtahvotee = gahrtahvo;
+         * Calculate and Store the Yahr
+         * */
+        let prorahnteeDeltaWithYahrRemoved = storeAndShiftDniTimeFragment(
+            prorahnteeDeltaWithVaileeRemoved,
+            dniGorahyan.YAHR_SHIFT_BIG,
+            { type: "yahr", source: "cavern" }
+        );
 
-        let prorahnteeDeltaWithGartahvoRemoved = shiftDelta(gahrtahvo, dniGorahyan.GAHRTAHVO_SHIFT_BIG, prorahnteeDeltaWithYahrRemoved, "GahrtahvoDelta");
+        /**
+         * Calculate and Store the Gahrtahvo
+         * */
+        let prorahnteeDeltaWithGartahvoRemoved = storeAndShiftDniTimeFragment(
+            prorahnteeDeltaWithYahrRemoved,
+            dniGorahyan.GAHRTAHVO_SHIFT_BIG,
+            { type: "gahrtahvo", source: "cavern" }
+        );
 
         /**
          * Calculate and Store the Pahrtahvo
          * */
         let pahrtahvo: Big | number = prorahnteeDeltaWithYahrRemoved.div(dniGorahyan.PAHRTAHVO_SHIFT_BIG);
         pahrtahvo = Math.floor(pahrtahvo.toNumber());
-        dniGorahyan.pahrtahvotee = pahrtahvo;
+        dniGorahyan.timeFragment = {
+            type: "pahrtahvo",
+            value: pahrtahvo,
+            source: "cavern"
+        };
 
         /**
-        * Calculate and Store the Tahvo
-        * */
-        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved.div(dniGorahyan.TAHVO_SHIFT_BIG);
-        tahvo = Math.floor(tahvo.toNumber());
-        dniGorahyan.tahvotee = tahvo;
-
-        let prorahnteeDeltaWithTahvoRemoved = shiftDelta(tahvo, dniGorahyan.TAHVO_SHIFT_BIG, prorahnteeDeltaWithGartahvoRemoved, "TahvoDelta");
-
-        /**
-        * Calculate and Store the Gorahn
-        * */
-        let gorahn: Big | number = prorahnteeDeltaWithTahvoRemoved.div(dniGorahyan.GORAHN_SHIFT_BIG);
-        gorahn = Math.floor(gorahn.toNumber());
-        dniGorahyan.gorahntee = gorahn;
-
-        let prorahnteeDeltaWithGorahnRemoved = shiftDelta(gorahn, dniGorahyan.GORAHN_SHIFT_BIG, prorahnteeDeltaWithTahvoRemoved, "GorahnDelta");
+         * Calculate and Store the Tahvo
+         * */
+        let prorahnteeDeltaWithTahvoRemoved = storeAndShiftDniTimeFragment(
+            prorahnteeDeltaWithGartahvoRemoved,
+            dniGorahyan.TAHVO_SHIFT_BIG,
+            { type: "tahvo", source: "cavern" }
+        );
 
         /**
-        * Calculate and Store the Prorahn
-        * */
-        dniGorahyan.prorahntee = Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber());
+         * Calculate and Store the Gorahn
+         * */
+        let prorahnteeDeltaWithGorahnRemoved = storeAndShiftDniTimeFragment(
+            prorahnteeDeltaWithTahvoRemoved,
+            dniGorahyan.GORAHN_SHIFT_BIG,
+            { type: "gorahn", source: "cavern" }
+        );
 
         /**
-        * Adjust All Calculated Times As Needed And Return Final TS Value
-        * */
+         * Calculate and Store the Prorahn
+         * */
+        dniGorahyan.timeFragment = {
+            type: "prorahn",
+            value: Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber()),
+            source: "cavern"
+        };
+
+        /**
+         * Adjust All Calculated Times As Needed And Return Final TS Value
+         * */
         adjustCalculatedTimes();
         setDniConvertedTimestamp();
         return dniGorahyan;
     }
 
+    const { safeDateOperation, safeStringOperation } = Utils();
+    const _setSurfaceTimeArtifactsByDateObject = function(surfaceDateTime: Date) {
+        const
+            year = surfaceDateTime.getUTCFullYear(),
+            month = surfaceDateTime.getMonth(),
+            day = surfaceDateTime.getDate(),
+            hours = surfaceDateTime.getHours(),
+            minutes = surfaceDateTime.getMinutes(),
+            seconds = surfaceDateTime.getSeconds();
+
+        const monthData = EarthMonthConstants.filter(item => item.id === month);
+
+        dniGorahyan.userProvidedSurfaceTS = surfaceDateTime;
+        dniGorahyan.timeFragment = {
+            type: "year",
+            value: year,
+            source: "surface"
+        };
+        dniGorahyan.monthId = monthData[0].id;
+        dniGorahyan.monthText = monthData[0].monthNameText;
+        dniGorahyan.timeFragment = {
+            type: "day",
+            value: day,
+            source: "surface"
+        };
+        dniGorahyan.timeFragment = {
+            type: "hour",
+            value: hours,
+            source: "surface"
+        };
+        dniGorahyan.timeFragment = {
+            type: "minute",
+            value: minutes,
+            source: "surface"
+        };
+        dniGorahyan.timeFragment = {
+            type: "second",
+            value: seconds,
+            source: "surface"
+        };
+
+        let dt = new Date(year, month, day);
+        dt.setUTCHours(hours);
+        dt.setUTCMinutes(minutes + (7 * 60));
+        dt.setUTCSeconds(seconds);
+        let temp = Date.parse(dt.toISOString());
+
+        return adjustForLeapSeconds(Big(temp), dniGorahyan.gorahyan);
+    }
+    const storeAndShiftDniTimeFragment = function(delta: Big, shift: Big, passedFragment: { type: string, source: string }) {
+        let
+            { type, source } = passedFragment,
+            value = delta
+                .div(shift)
+                .round(Big.roundDown)
+                .toNumber(),
+            shiftFor = type.charAt(0).toUpperCase() + type.slice(1);
+
+        // Store The Fragment Value
+        dniGorahyan.timeFragment = { type, value, source };
+
+        // Return the Shifted Delta After Fragment Processing
+        return shiftDelta(value, shift, delta, `${shiftFor}Delta`);
+    }
     const shiftDelta = function(dniUnit: number, dniUnitShift: Big, currentDelta: Big, shiftFor: string): Big {
         let
             deltaShiftValueToRemove = Big(dniUnit).times(dniUnitShift),
@@ -213,7 +275,6 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
 
         return remainingDelta;
     }
-
     const adjustCalculatedTimes = function() {
         adjustTimeValue('prorahn');
         adjustTimeValue('gorahn');
@@ -238,9 +299,15 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
                 .toNumber();
         } else {
             // @ts-ignore
-            dniGorahyan[`${adjustsFor}tee`] = Big(dniGorahyan[`${adjustsFor}tee`])
+            let newValue = Big(dniGorahyan[`${adjustsFor}tee`])
                 .plus(adjustment)
                 .toNumber();
+
+            dniGorahyan.timeFragment = {
+                type: adjustsFor,
+                value: newValue,
+                source: "cavern"
+            };
         }
     }
     const adjustTimeValue = function(unitOfTime: string) {
@@ -278,9 +345,16 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
                     .toNumber();
             } else {
                 // @ts-ignore
-                dniGorahyan[`${unitOfTime}tee`] = Big(dniGorahyan[`${unitOfTime}tee`])
-                    .plus(adjustedValue)
-                    .toNumber();
+                let numberValue = dniGorahyan[`${unitOfTime}tee`],
+                    newValue = Big(numberValue)
+                        .plus(adjustedValue)
+                        .toNumber();
+
+                dniGorahyan.timeFragment = {
+                    type: unitOfTime,
+                    value: newValue,
+                    source: "cavern"
+                };
             }
 
             // Sub-processing when a main component is adjusted
@@ -292,9 +366,9 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
                     _subAdjustment("tahvo", currentValue, minValue, maxValue);
                     break;
                 case "tahvo":
-                    _subAdjustment("gartahvo", currentValue, minValue, maxValue);
+                    _subAdjustment("gahrtahvo", currentValue, minValue, maxValue);
                     break;
-                case "gartahvo":
+                case "gahrtahvo":
                     _subAdjustment("yahr", currentValue, minValue, maxValue);
                     break;
                 case "yahr":
@@ -309,26 +383,37 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
     const finalCalendarAdjustments = function() {
         // Final Calendar Adjustments
         // Always Increment Hahr By 9647 After Date Conversion
-        dniGorahyan.hahrtee = Big(dniGorahyan.hahrtee)
-            .plus(dniGorahyan.DNI_HAHR_REFERENCE_BIG)
-            .toNumber();
+        dniGorahyan.timeFragment = {
+            type: "hahr",
+            value: Big(dniGorahyan.hahrtee)
+                .plus(dniGorahyan.DNI_HAHR_REFERENCE_BIG)
+                .toNumber(),
+            source: "cavern"
+        };
 
         // Always Increment Pahrtahvo By 1 After Date Conversion
-        dniGorahyan.pahrtahvotee = Big(dniGorahyan.pahrtahvotee)
-            .plus(1)
-            .toNumber();
+        dniGorahyan.timeFragment = {
+            type: "pahrtahvo",
+            value: Big(dniGorahyan.pahrtahvotee)
+                .plus(1)
+                .toNumber(),
+            source: "cavern"
+        };
 
         // Always Increment Yahr By 1 After Date Conversion
-        dniGorahyan.yahrtee = Big(dniGorahyan.yahrtee)
-            .plus(1)
-            .toNumber();
+        dniGorahyan.timeFragment = {
+            type: "yahr",
+            value: Big(dniGorahyan.yahrtee)
+                .plus(1)
+                .toNumber(),
+            source: "cavern"
+        };
     }
-
     const setDniConvertedTimestamp = function() {
-        dniGorahyan.systemProvidedSurfaceTS = dniGorahyan.timestampFormatter(dniGorahyan);
+        let format = TimestampFormatLoaders(dniGorahyan);
+        dniGorahyan.systemProvidedSurfaceTS = format.dniDateTimeStringFormatter();
         return dniGorahyan;
     }
-
     const setFullVaileeData = function() {
         try {
             let data = DniMonthConstants[dniGorahyan.vaileetee];

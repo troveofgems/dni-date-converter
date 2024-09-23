@@ -1,17 +1,21 @@
 import {DniDatetimeConstantsInterface} from "./dni.datetime.constants.interface";
 import {LeapSecondInterface} from "./leap.second.interface";
 
-export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock"]
+// Translation: [Gorahyan - D'ni For "Clock"]
+export interface GorahyanInterface {
     dniConstants: DniDatetimeConstantsInterface,
     _leapSeconds: LeapSecondInterface,
-    cavern: {
-        convertedTimestamp: string
-    },
-    surface: {
-        currentTS: Date;
-    }
-    conversionArtifacts: {
+    timestampArtifacts: {
         cavern: {
+            providedTimestamps: {
+                byUser: string,
+                fromSystem: {
+                    utc: string,
+                    cavern: string,
+                    local: string
+                },
+                outputType: string | number
+            },
             bigs: {
                 hahr: Big,
                 vailee: {
@@ -20,7 +24,8 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     dniFontMappingText: string
                 },
                 yahr: Big,
-                gartahvo: Big,
+                gahrtahvo: Big,
+                pahrtahvo: Big,
                 tahvo: Big,
                 gorahn: Big,
                 prorahn: Big,
@@ -30,7 +35,7 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     prorahnteeDelta: Big,
                     vaileeShiftedDelta: Big,
                     yahrShiftedDelta: Big,
-                    gartahvoShiftedDelta: Big,
+                    gahrtahvoShiftedDelta: Big,
                     tahvoShiftedDelta: Big,
                     gorahnShiftedDelta: Big
                 }
@@ -43,7 +48,8 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     dniFontMappingText: string
                 },
                 yahr: number,
-                gartahvo: number,
+                gahrtahvo: number,
+                pahrtahvo: number,
                 tahvo: number,
                 gorahn: number,
                 prorahn: number,
@@ -53,13 +59,18 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
                     prorahnteeDelta: number,
                     vaileeShiftedDelta: number,
                     yahrShiftedDelta: number,
-                    gartahvoShiftedDelta: number,
+                    gahrtahvoShiftedDelta: number,
                     tahvoShiftedDelta: number,
                     gorahnShiftedDelta: number
                 }
             }
         },
         surface: {
+            providedTimestamps: {
+                byUser: Date | string,
+                fromSystem: string,
+                outputType: number
+            },
             bigs: {
                 year: Big,
                 month: {
@@ -94,4 +105,9 @@ export interface GorahyanInterface { // Translation: [Gorahyan - D'ni For "Clock
             }
         }
     },
+    outputSettings: {
+        useDniFontMapping: boolean;
+        includeNthBell: boolean;
+        timestampFormat: number;
+    }
 }

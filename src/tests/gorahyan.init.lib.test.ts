@@ -1,7 +1,5 @@
 import {describe, expect, test} from "@jest/globals";
-
-import {init, testForFailedInit} from "../lib/gorahyan.init.lib";
-import {DniGorahyan} from "../index";
+import DniGorahyan from "../index";
 
 describe("Gorahyan Init Library Test Suite", () => {
     describe("Library Loaded", () => {
@@ -22,13 +20,6 @@ describe("Gorahyan Init Library Test Suite", () => {
             let gorahyanInstantiated: DniGorahyan | null = new DniGorahyan();
             expect(typeof gorahyanInstantiated.converters.cavernToSurface).toBe("function");
             gorahyanInstantiated = null;
-        });
-    });
-
-    describe("Thrown Error Rendered", () => {
-        test("Test throw new Error()", () => {
-            let gorahyanInstantiated: DniGorahyan | null = new DniGorahyan();
-            expect(() => testForFailedInit(gorahyanInstantiated, true)).toThrow("Class Init Failed. Unable to set methods or properties");
         });
     });
 });

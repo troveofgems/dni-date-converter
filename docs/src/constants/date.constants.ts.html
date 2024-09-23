@@ -1,0 +1,514 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/constants/date.constants.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/constants</a> date.constants.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>144/144</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>144/144</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">/** Calendar Convergence Constants */
+export const EARTH_CONVERGENCE_DATE_STRING = "1991-04-21T09:54:00";
+export const DNI_CONVERGENCE_DATE_STRING = "Leefo 1 9647 DE 0:00:00:00";
+export const CONVERGENCE_YEAR = 1991;
+export const CONVERGENCE_MONTH = 4;
+export const CONVERGENCE_DAY = 21;
+export const CONVERGENCE_HOUR = 16;
+export const CONVERGENCE_MINUTE = 54;
+export const CONVERGENCE_SECOND = 0;
+&nbsp;
+/** D'ni Date-Time Constants */
+export const EARTH_MS_PER_DNI_HAHR = 31556925216;
+export const DNI_HAHR_CONVERGENCE_START = 9647;
+export const PRORAHNTEE_PER_HAHR = 22656250;
+export const PRORAHNTEE_ELAPSED_SINCE_CONVERGENCE = 218564843750;
+export const EARTH_MS_ELAPSED_SINCE_CONVERGENCE = 672252866000;
+export const EARTH_MS_PER_PRORAHN = 1392.8573888441379;
+&nbsp;
+/** D'ni Date-Time Min/Max Values */
+// - Mins
+export const PRORAHN_MIN = 0;
+export const GORAHN_MIN = 0;
+export const TAHVO_MIN = 0;
+export const PAHRTAHVO_MIN = 1;
+export const GAHRTAHVO_MIN = 0;
+export const YAHR_MIN = 0;
+export const VAILEE_MIN = 0;
+// - Maxes
+export const PRORAHN_MAX = 25;
+export const GORAHN_MAX = 25;
+export const TAHVO_MAX = 25;
+export const PAHRTAHVO_MAX = 25;
+export const GAHRTAHVO_MAX = 5;
+export const YAHR_MAX = 29;
+export const VAILEE_MAX = 9; // Index Begins at 0
+&nbsp;
+/** D'ni Date-Time Shift Constants */
+export const HAHR_SHIFT = EARTH_MS_PER_DNI_HAHR;
+export const VAILEE_SHIFT = 2265625;
+export const YAHR_SHIFT = 78125;
+export const GAHRTAHVO_SHIFT = 15625;
+export const PAHRTAHVO_SHIFT = 3125;
+export const TAHVO_SHIFT = 625;
+export const GORAHN_SHIFT = 25;
+&nbsp;
+/** Control Test Date Constants */
+export const FIRST_CONTROL_TEST_VALUE = EARTH_CONVERGENCE_DATE_STRING;
+export const SECOND_CONTROL_TEST_VALUE = new Date(EARTH_CONVERGENCE_DATE_STRING);
+export const THIRD_CONTROL_TEST_VALUE = null;
+export const FOURTH_CONTROL_TEST_VALUE = DNI_CONVERGENCE_DATE_STRING;
+export const FIFTH_CONTROL_TEST_VALUE = "Leevofo 8 9798 DE 2:13:00:00";
+export const SIXTH_CONTROL_TEST_VALUE = "Leevosahn 5 9000 BE 1:05:06:07";
+&nbsp;
+/** D'ni Holidays */
+export const DNI_HOLIDAY_NEW_YEAR = "Leefo 1";
+export const DNI_HOLIDAY_FIRST_FEAST_OF_THE_MAKER = "Lenovoo 10 BE";
+export const DNI_HOLIDAY_SECOND_FEAST_OF_THE_MAKER = "Leebro 20 BE";
+export const DNI_HOLIDAY_THIRD_FEAST_OF_THE_MAKER = "Leevofo 18 BE";
+export const DNI_HOLIDAY_COMMON_LIBRARY_OPENING = "Leefo 12 233 DE";
+export const DNI_HOLIDAY_DAY_OF_DANCING = "Leetar 21 3646 DE";
+export const DNI_HOLIDAY_FIRST_ARRIVAL_OF_THE_GREAT_KING = "Leevot 12 1323 DE";
+export const DNI_HOLIDAY_CORONATION_OF_KING_KERATH = "Leevofo 27 6731 DE";
+&nbsp;
+/** D'ni Holiday Descriptions */
+export const DNI_HOLIDAY_DESC__FEAST_OF_THE_MAKER =
+    "The celebration in question predates the D'ni's arrival on Earth, sharing its " +
+    "name with two other similar events. Unfortunately, there is limited information available " +
+    "regarding the rituals performed on this day or its specific purpose. Based on the " +
+    "description provided, it appears to have been a religious holy day dedicated to honoring " +
+    "the D'ni deity Yahvo."
+&nbsp;
+export const DNI_HOLIDAY_DESC__DNI_NEW_YEAR =
+    "This holiday celebrates the D'ni New Year.";
+&nbsp;
+export const DNI_HOLIDAY_DESC__COMMON_LIBRARY_OPENING =
+    "On this momentous day, the Common Library burst forth onto the scene, ushering in an era of unprecedented joy " +
+    "for the D'ni people. This groundbreaking event marked a significant milestone in history, as it granted ordinary " +
+    "citizens access to realms beyond their wildest dreams – all through the power of books.\n\n" +
+    "This remarkable development allowed those who couldn't afford such luxuries on their own to explore vast new " +
+    "worlds. While some historical accounts suggest that not everyone was entirely thrilled about this change, the " +
+    "opening of the library ultimately proved to be a resounding success among the common folk.\n\n" +
+    "It's worth noting that some records hint at internal debates within the guilds regarding the decision to open " +
+    "the library on earth. However, the exact reasons behind these discussions remain unclear. Some speculate that " +
+    "royal intervention may have played a role in the final decision, though this remains speculative.\n\n" +
+    "Despite any potential reservations, the Common Library was opened, bringing boundless opportunity to the " +
+    "D'ni people. This momentous occasion would go on to shape the course of history, offering new possibilities " +
+    "and experiences to generations to come."
+&nbsp;
+export const DNI_HOLIDAY_DESC__DAY_OF_DANCING = "The Bittersweet Celebration of the First Day of Dancing\n\n" +
+    "In a paradoxical turn of events, the D'ni transformed what might have been a somber occasion into a grand " +
+    "celebration. The First Day of Dancing commemorates a pivotal moment in their history, marking the destruction " +
+    "of their ancient homeland.\n\n" +
+    "This day, which could have been filled with mourning and loss, became a reason for jubilation. The D'ni " +
+    "chose to view their departure from their ruined world as a liberation, rather than a tragedy. Their " +
+    "decision to seal their memories of the old world from their hearts was seen as a testament to their " +
+    "resilience and adaptability.\n\n" +
+    "The celebration honored not just the destruction of their former home, but also the wisdom of the Great " +
+    "King who had taught them to let go of the past. By embracing this new chapter in their history, " +
+    "the D'ni demonstrated their capacity to find hope even in the face of catastrophic loss.\n\n" +
+    "Moreover, this day marked the beginning of a new era – one where they could continue their lives on earth, " +
+    "free from the destructive path that had consumed their original world. The First Day of Dancing became a " +
+    "powerful symbol of transformation and renewal, reminding future generations of the strength and determination " +
+    "that had carried their people through such trying times.\n\n" +
+    "In essence, what could have been a day of mourning turned into a celebration of life, hope, and the ability to" +
+    " forge a new destiny. The D'ni's choice to turn adversity into triumph serves as a powerful reminder of the human " +
+    "spirit's capacity to find joy even in the face of profound loss.";
+&nbsp;
+export const DNI_HOLIDAY_DESC__FIRST_ARRIVAL_OF_THE_GREAT_KING =
+    "The arrival of the Great King marked a pivotal moment in D'ni history, though details about this figure " +
+    "remain shrouded in mystery. The Great King's identity has been lost to time, leaving behind only whispers " +
+    "of their significance.\n\n" +
+    "This enigmatic leader brought about a fundamental shift in the D'ni way of life. They declared earth as the " +
+    "D'ni's permanent home, effectively severing ties with their ancient world. This decree was met with both " +
+    "acceptance and perhaps some reluctance, as it meant leaving behind everything they had ever known.\n\n" +
+    "The Great King's prophecies were said to be numerous and profound, inscribed in books that have yet to " +
+    "be discovered. These prophetic writings were believed to hold the keys to understanding the future and " +
+    "guiding the D'ni people through the trials ahead.\n\n" +
+    "However, the passage of time has taken its toll on these ancient texts. While the prophecies " +
+    "themselves may still exist in some form, they remain inaccessible to modern D'ni scholars. Instead, " +
+    "knowledge of these predictions comes from secondary sources, whose reliability cannot be verified.\n\n" +
+    "Despite the lack of concrete evidence, the arrival of the Great King is remembered as a turning point " +
+    "in D'ni history. Their words continue to shape the beliefs and actions of the D'ni people, even though the " +
+    "specifics of those words remain a mystery.\n\n" +
+    "This event serves as a poignant reminder of the power of leadership and prophecy in shaping " +
+    "the course of civilization. It also highlights the challenges faced by historians and scholars " +
+    "in reconstructing the past, especially when primary sources are missing and information relies heavily " +
+    "on oral tradition and incomplete records.";
+&nbsp;
+export const DNI_HOLIDAY_DESC__CORONATION_OF_KING_KERATH =
+    "King Kerath's coronation stands as a significant event in the annals of D'ni history, marking " +
+    "the culmination of his reign as the final ruler of the D'ni kingdom. This momentous occasion held " +
+    "considerable weight for the D'ni people, reflecting the gravity of their situation as they stood at the " +
+    "precipice of their civilization's downfall.\n\n" +
+    "While the nature of this event remains somewhat ambiguous, historians continue to debate whether it served as " +
+    "a formal holiday that persisted until the D'ni civilization's demise, or simply as a routine calendar entry, " +
+    "akin to modern-day observances like Presidents' Day in the United States."
+&nbsp;
+/** D'ni Misc Dates */
+export const THE_FALL = "Leesahn 8 9400 DE";
+export const THE_FALL__DESC = "Veovis' ill-fated rebellion against his fellow D'ni marked the beginning of an " +
+    "era of unrelenting devastation. This pivotal event in D'ni history resulted in widespread destruction and " +
+    "catastrophic loss of life, forever altering the course of the once-thriving civilization. The aftermath of " +
+    "this fateful day continues to evoke profound sadness and serves as a poignant reminder of the transience of " +
+    "power and the enduring legacy of conflict.";</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2024-09-23T18:44:11.276Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

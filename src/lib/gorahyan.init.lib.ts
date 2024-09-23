@@ -1,14 +1,14 @@
 import Big from "big.js";
-import {DniGorahyan} from "../index";
-import {GorahyanInterface} from "../interfaces/gorahyan.interface";
+import DniGorahyan from "../index";
 
 // Functions Called During Init
-import DniDateTimeConstants from "../constants/dni.date.constants";
+import DniGorahyanConstants from "../constants/dni.date.constants";
 import {attachLeapSecondData} from "./leap.second.lib";
 
 // Functions Attached During Init
-import convertSurfaceTimestampToDniCavernTimestamp, { setSurfaceTimeArtifactsByString } from "./surface.converter.lib";
+import convertSurfaceTimestampToDniCavernTimestamp, {setSurfaceTimeArtifactsByString} from "./surface.converter.lib";
 import convertCavernTimestampToSurfaceTimestamps from "./cavern.converter.lib";
+import UtilsLib from "./utils.lib";
 
 /** Initializes the request for a DniGorahyan Object.
  *
@@ -24,37 +24,40 @@ export function init(dniGorahyan: DniGorahyan): DniGorahyan {
     dniGorahyan.gorahyan = setGorahyan();
 
     // Set The Converter Methods
-    dniGorahyan.converters = setConverterMethods(dniGorahyan.gorahyan);
+    dniGorahyan.converters = mountConverterMethods(dniGorahyan);
 
     // Set The Test Methods
-    dniGorahyan.tests = setTestMethods(dniGorahyan.gorahyan);
+    dniGorahyan.tests = mountTestMethods(dniGorahyan);
 
-    testForFailedInit(dniGorahyan);
+    // Run Convergence Conversion
+    const {
+        STRING_CONSTANT: EARTH_CALENDAR_CONVERGENCE_STRING
+    } = dniGorahyan.gorahyan.dniConstants.controls.calendarConvergence.earth;
+    dniGorahyan.elapsedTimeAtConvergence = setSurfaceTimeArtifactsByString(EARTH_CALENDAR_CONVERGENCE_STRING, dniGorahyan);
 
     return dniGorahyan;
 }
 
-export function testForFailedInit(dniGorahyan: DniGorahyan, jestForceError = false): Error | void {
-    if(!dniGorahyan.gorahyan || !dniGorahyan.converters || !dniGorahyan.tests || jestForceError) {
-        throw new Error("Class Init Failed. Unable to set methods or properties");
-    }
-}
 function setGorahyan() {
     const
         _leapSeconds = attachLeapSecondData(),
-        dniConstants = DniDateTimeConstants(),
-        gorahyan = {
-            _leapSeconds,
-            dniConstants,
+        dniConstants = DniGorahyanConstants();
+
+    return {
+        _leapSeconds,
+        dniConstants,
+        timestampArtifacts: {
             cavern: {
-                convertedTimestamp: ""
-            },
-            surface: {
-                currentTS: new Date()
-            },
-            conversionArtifacts: {
-                cavern: {
-                    bigs: {
+                providedTimestamps: {
+                  byUser: "",
+                  fromSystem: {
+                      utc: "",
+                      cavern: "",
+                      local: ""
+                  },
+                  outputType: 0
+                },
+                bigs: {
                         hahr: Big(0),
                         vailee: {
                             id: Big(0),
@@ -62,7 +65,8 @@ function setGorahyan() {
                             dniFontMappingText: ""
                         },
                         yahr: Big(0),
-                        gartahvo: Big(0),
+                        gahrtahvo: Big(0),
+                        pahrtahvo: Big(0),
                         tahvo: Big(0),
                         gorahn: Big(0),
                         prorahn: Big(0),
@@ -72,12 +76,12 @@ function setGorahyan() {
                             prorahnteeDelta: Big(0),
                             vaileeShiftedDelta: Big(0),
                             yahrShiftedDelta: Big(0),
-                            gartahvoShiftedDelta: Big(0),
+                            gahrtahvoShiftedDelta: Big(0),
                             tahvoShiftedDelta: Big(0),
                             gorahnShiftedDelta: Big(0)
                         }
                     },
-                    readonly: {
+                readonly: {
                         hahr: 0,
                         vailee: {
                             id: 0,
@@ -85,7 +89,8 @@ function setGorahyan() {
                             dniFontMappingText: ""
                         },
                         yahr: 0,
-                        gartahvo: 0,
+                        gahrtahvo: 0,
+                        pahrtahvo: 0,
                         tahvo: 0,
                         gorahn: 0,
                         prorahn: 0,
@@ -95,14 +100,19 @@ function setGorahyan() {
                             prorahnteeDelta: 0,
                             vaileeShiftedDelta: 0,
                             yahrShiftedDelta: 0,
-                            gartahvoShiftedDelta: 0,
+                            gahrtahvoShiftedDelta: 0,
                             tahvoShiftedDelta: 0,
                             gorahnShiftedDelta: 0
                         }
                     }
+            },
+            surface: {
+                providedTimestamps: {
+                    byUser: "",
+                    fromSystem: "",
+                    outputType: 0
                 },
-                surface: {
-                    bigs: {
+                bigs: {
                         year: Big(0),
                         month: {
                             id: Big(0),
@@ -118,7 +128,7 @@ function setGorahyan() {
                             elapsedSecondsForGivenDate: Big(0)
                         }
                     },
-                    readonly: {
+                readonly: {
                         year: 0,
                         month: {
                             id: 0,
@@ -134,83 +144,110 @@ function setGorahyan() {
                             elapsedSecondsForGivenDate: 0
                         }
                     }
-                }
             }
         },
-        { earthConvergenceDateTimeString } = dniConstants.dates.calendarConvergence,
-        elapsedSecondsAtConvergence = setSurfaceTimeArtifactsByString(earthConvergenceDateTimeString, gorahyan);
-
-    // Set Surface Date Time Convergence Artifacts
-    gorahyan.conversionArtifacts.surface.bigs.timeDeltas.elapsedSecondsAtConvergence =
-        Big(elapsedSecondsAtConvergence);
-    gorahyan.conversionArtifacts.surface.readonly.timeDeltas.elapsedSecondsAtConvergence =
-        elapsedSecondsAtConvergence;
-
-    return  gorahyan;
-}
-function setConverterMethods(gorahyan: GorahyanInterface) {
-    return  {
-        surfaceToCavern: convertSurfaceTimestampToDniCavernTimestamp(gorahyan),
-        cavernToSurface: convertCavernTimestampToSurfaceTimestamps(gorahyan)
+        outputSettings: {
+            useDniFontMapping: false,
+            includeNthBell: true,
+            timestampFormat: 0, // Default Trove of Gems D'ni DateTime Format
+        }
     };
 }
-function setTestMethods(gorahyan: GorahyanInterface) {
+function mountConverterMethods(dniGorahyan: DniGorahyan) {
+    return  {
+        surfaceToCavern: convertSurfaceTimestampToDniCavernTimestamp(dniGorahyan),
+        cavernToSurface: convertCavernTimestampToSurfaceTimestamps(dniGorahyan)
+    };
+}
+function mountTestMethods(dniGorahyan: DniGorahyan) {
     const
         runControlTests = () => {
+            const _storeResults = function(testResult: any, testNumber: string) {
+                dniGorahyan.nthControlTestResult = {
+                    testResult,
+                    testNumber
+                };
+            }
+
             const
+                utils = UtilsLib(),
                 testStart = new Date(),
                 {
-                    earthConvergenceDateTimeString: FIRST_CONTROL_TEST_VALUE
-                } = gorahyan.dniConstants.dates.calendarConvergence,
-                SECOND_CONTROL_TEST_VALUE = new Date(FIRST_CONTROL_TEST_VALUE),
-                THIRD_CONTROL_TEST_VALUE = null,
-                FOURTH_CONTROL_TEST_VALUE = "Leefo 1 9647 DE 0:00:00:00",
-                FIFTH_CONTROL_TEST_VALUE = "Leevofo 8 9798 DE 2:13:00:00",
-                SIXTH_CONTROL_TEST_VALUE = "Leevosahn 5 9000 BE 1:05:06:07";
-
-            // Use: Surface DateTime String
-            let
-                first_test: DniGorahyan | string | null = new DniGorahyan(),
-                first_test_results = first_test.converters.surfaceToCavern(FIRST_CONTROL_TEST_VALUE);
+                   firstControlTestValue, secondControlTestValue, thirdControlTestValue,
+                   fourthControlTestValue, fifthControlTestValue, sixthControlTestValue,
+                } = dniGorahyan.gorahyan.dniConstants.controls.tests;
 
             let
-                second_test: DniGorahyan | string | null = new DniGorahyan(),
-                second_test_results = second_test.converters.surfaceToCavern(SECOND_CONTROL_TEST_VALUE);
+                first_test:     DniGorahyan | string | null = new DniGorahyan(),
+                second_test:    DniGorahyan | string | null = new DniGorahyan(),
+                third_test:     DniGorahyan | string | null = new DniGorahyan(),
+                fourth_test:    DniGorahyan | string | null = new DniGorahyan(),
+                fifth_test:     DniGorahyan | string | null = new DniGorahyan(),
+                sixth_test:     DniGorahyan | string | null = new DniGorahyan(),
+                seventh_test:   DniGorahyan | string | null = new DniGorahyan(),
+                eighth_test:    DniGorahyan | string | null = new DniGorahyan(),
+                ninth_test:     DniGorahyan | string | null = new DniGorahyan(),
+                tenth_test:     DniGorahyan | string | null = new DniGorahyan(),
+                eleventh_test:  DniGorahyan | string | null = new DniGorahyan(),
+                twelfth_test:   DniGorahyan | string | null = new DniGorahyan();
 
-            let
-                third_test: DniGorahyan | string | null = new DniGorahyan(),
-                third_test_results = third_test.converters.surfaceToCavern(THIRD_CONTROL_TEST_VALUE);
+            // Run All Default Class Tests
+            let first_test_result = first_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(first_test_result.systemProvidedSurfaceTS, "first");
 
-            let
-                fourth_test: DniGorahyan | string | null = new DniGorahyan(),
-                fourth_test_results = fourth_test.converters.cavernToSurface(FOURTH_CONTROL_TEST_VALUE);
+            let second_test_result = second_test.converters.surfaceToCavern(secondControlTestValue);
+            _storeResults(second_test_result.systemProvidedSurfaceTS, "second");
 
-            let
-                fifth_test: DniGorahyan | string | null = new DniGorahyan(),
-                fifth_test_results = fifth_test.converters.cavernToSurface(FIFTH_CONTROL_TEST_VALUE);
+            let third_test_result = third_test.converters.surfaceToCavern(thirdControlTestValue);
+            _storeResults(third_test_result.systemProvidedSurfaceTS, "third");
 
-            let
-                sixth_test: DniGorahyan | string | null = new DniGorahyan(),
-                sixth_test_results = sixth_test.converters.cavernToSurface(SIXTH_CONTROL_TEST_VALUE);
+            let fourth_test_result = fourth_test.converters.cavernToSurface(fourthControlTestValue);
+            _storeResults(fourth_test_result.systemProvidedCavernTS, "fourth");
 
-            const runtimeMetrics = calculateElapsedRuntimeOfControlTests(testStart, new Date());
+            let fifth_test_result = fifth_test.converters.cavernToSurface(fifthControlTestValue);
+            _storeResults(fifth_test_result.systemProvidedCavernTS, "fifth");
 
-            return {
-                runtimeMetrics,
-                generated: {
-                    first_test_results,
-                    second_test_results,
-                    third_test_results,
-                    fourth_test_results,
-                    fifth_test_results,
-                    sixth_test_results
-                }
-            };
+            let sixth_test_result = sixth_test.converters.cavernToSurface(sixthControlTestValue);
+            _storeResults(sixth_test_result.systemProvidedCavernTS, "sixth");
+
+            // Test Class Option Changes - Timestamp Formats
+            seventh_test.switchTimestampFormatter(1);
+            let seventh_test_result = seventh_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(seventh_test_result.systemProvidedSurfaceTS, "seventh");
+
+            eighth_test.switchTimestampFormatter(2);
+            let eighth_test_result = eighth_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(eighth_test_result.systemProvidedSurfaceTS, "eighth");
+
+            // Test Class Option Changes - Font Formats
+            ninth_test.useDniFontMapping = true;
+            let ninth_test_result = ninth_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(ninth_test_result.systemProvidedSurfaceTS, "ninth");
+
+            tenth_test.useDniFontMapping = true;
+            tenth_test.switchTimestampFormatter(1);
+            let tenth_test_result = tenth_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(tenth_test_result.systemProvidedSurfaceTS, "tenth");
+
+            eleventh_test.useDniFontMapping = true;
+            eleventh_test.switchTimestampFormatter(2);
+            let eleventh_test_result = eleventh_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(eleventh_test_result.systemProvidedSurfaceTS, "eleventh");
+
+            // Test Default Switch
+            twelfth_test.switchTimestampFormatter(3); // Invalid Type
+            twelfth_test.includeNthBell = true;
+            let twelfth_test_result = twelfth_test.converters.surfaceToCavern(firstControlTestValue);
+            _storeResults(twelfth_test_result.systemProvidedSurfaceTS, "twelfth");
+
+            dniGorahyan.runtimeMetrics = utils.calculateElapsedRuntimeOfControlTests(testStart, new Date());
+            Object.freeze(dniGorahyan.gorahyan.dniConstants.controls.tests.results);
+
+            return dniGorahyan;
         },
         simulateCatastrophicInitFailure = () => {
             // @ts-ignore
-            gorahyan = null;
-
+            dniGorahyan.gorahyan = null;
             throw new Error("Class Init Failed. Unable to set methods or properties");
         }
 
@@ -218,20 +255,4 @@ function setTestMethods(gorahyan: GorahyanInterface) {
         runControlTests,
         simulateCatastrophicInitFailure
     };
-}
-function calculateElapsedRuntimeOfControlTests(testStart: Date, testEnd: Date) {
-    const
-        elapsedTimeInMS = testEnd.getTime() - testStart.getTime(),
-        seconds = Math.floor(elapsedTimeInMS / 1000),
-        minutes = Math.floor(seconds / 60),
-        hours = Math.floor(minutes / 60),
-        elapsedTimeMessage = `Elapsed time to run tests: ${hours} hours, ${minutes} minutes, ${seconds} seconds, ${elapsedTimeInMS} milliseconds`;
-
-    return {
-        elapsedTimeMessage,
-        elapsedTimeInMS,
-        hours,
-        minutes,
-        seconds
-    }
 }

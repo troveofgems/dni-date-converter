@@ -132,19 +132,28 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
         /**
          * Calculate and Store the Vailee
          * */
-        let vaileeId: Big | number = deltaInProrahntee.div(dniGorahyan.VAILEE_SHIFT_BIG);
-        vaileeId = Math.floor(vaileeId.toNumber());
+        let vaileeId: number = deltaInProrahntee
+            .div(dniGorahyan.VAILEE_SHIFT_BIG)
+            .round(Big.roundDown)
+            .toNumber();
+
+        dniGorahyan.vaileetee = vaileeId;
 
         let prorahnteeDeltaWithVaileeRemoved = shiftDelta(vaileeId, dniGorahyan.VAILEE_SHIFT_BIG, deltaInProrahntee, "vailee");
 
         /**
          * Calculate and Store the Yahr
          * */
-        let prorahnteeDeltaWithYahrRemoved = storeAndShiftDniTimeFragment(
-            prorahnteeDeltaWithVaileeRemoved,
-            dniGorahyan.YAHR_SHIFT_BIG,
-            { type: "yahr", source: "cavern" }
-        );
+        let value: Big | number = prorahnteeDeltaWithVaileeRemoved
+                .div(dniGorahyan.YAHR_SHIFT_BIG).round(0, Big.roundDown).toNumber();
+
+        dniGorahyan.timeFragment = {
+            type: "yahr",
+            value,
+            source: "cavern"
+        };
+
+        let prorahnteeDeltaWithYahrRemoved =  shiftDelta(value, dniGorahyan.YAHR_SHIFT_BIG, prorahnteeDeltaWithVaileeRemoved, "yahr");
 
         /**
          * Calculate and Store the Gahrtahvo
@@ -169,6 +178,9 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
         /**
          * Calculate and Store the Tahvo
          * */
+        let tahvo: Big | number = prorahnteeDeltaWithGartahvoRemoved
+            .div(dniGorahyan.TAHVO_SHIFT_BIG).round(0, Big.roundDown).toNumber();
+
         let prorahnteeDeltaWithTahvoRemoved = storeAndShiftDniTimeFragment(
             prorahnteeDeltaWithGartahvoRemoved,
             dniGorahyan.TAHVO_SHIFT_BIG,
@@ -189,7 +201,7 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
          * */
         dniGorahyan.timeFragment = {
             type: "prorahn",
-            value: Math.floor(prorahnteeDeltaWithGorahnRemoved.toNumber()),
+            value: prorahnteeDeltaWithGorahnRemoved.round(0, Big.roundDown).toNumber(),
             source: "cavern"
         };
 
@@ -255,7 +267,7 @@ export function SurfaceConverterLib(dniGorahyan: DniGorahyan) {
             { type, source } = passedFragment,
             value = delta
                 .div(shift)
-                .round(Big.roundDown)
+                .round(0, Big.roundDown)
                 .toNumber(),
             shiftFor = type.charAt(0).toUpperCase() + type.slice(1);
 

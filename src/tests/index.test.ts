@@ -1,6 +1,6 @@
 import {describe, expect, test} from "@jest/globals";
 
-import DniGorahyan, {buildNewDniGorahyan} from "../index";
+import DniGorahyan from "../index";
 
 describe("Interface Test Suite", () => {
     describe("DniGorahyan Instantiation", () => {
@@ -166,7 +166,7 @@ describe("Interface Test Suite", () => {
              *
              * @Results: "1st bell, 0:00:00:00, lEfo 1, 9647 de"
              * */
-            expect(dniGorahyanInstantiated.ninthControlTestResult).toBe("1st bell, 0:00:00:00, lEfo 1, 9647 de");
+            expect(dniGorahyanInstantiated.ninthControlTestResult).toBe("1st bell, 0:0:0:0, lEfo 1, %)\\ de");
 
             /**
              * Tenth Control Test:
@@ -179,7 +179,7 @@ describe("Interface Test Suite", () => {
              *
              * @Results: "lEfo 1 9647 de 0:00:00:00"
              * */
-            expect(dniGorahyanInstantiated.tenthControlTestResult).toBe("lEfo 1, 9647 de 0:00:00:00");
+            expect(dniGorahyanInstantiated.tenthControlTestResult).toBe("lEfo 1, %)\\ de 0:0:0:0");
 
             /**
              * Eleventh Control Test:
@@ -192,7 +192,7 @@ describe("Interface Test Suite", () => {
              *
              * @Results: "0:00:00:00, lEfo 1, 9647 de"
              * */
-            expect(dniGorahyanInstantiated.eleventhControlTestResult).toBe("0:00:00:00, lEfo 1, 9647 de");
+            expect(dniGorahyanInstantiated.eleventhControlTestResult).toBe("0:0:0:0, lEfo 1, %)\\ de");
 
             // Check the spy if the method was called correctly.
             expect(runControlTestsSpy).toHaveBeenCalled();
@@ -366,10 +366,6 @@ describe("Interface Test Suite", () => {
                 "minutes": 0,
                 "seconds": 0
             });
-        });
-        test("buildNewDniGorahyan Exported Function", () => {
-            const dniGorahyanInstantiated = buildNewDniGorahyan();
-            expect(typeof dniGorahyanInstantiated).toBe("object");
         });
     });
 });

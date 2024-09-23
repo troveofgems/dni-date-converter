@@ -28,7 +28,7 @@ describe("Timestamp Format Test Suite", () => {
             dniGorahyanInstantiated.timeFragment = { type: "hahr", value: -1, source: "cavern" };
 
             let convertedTimestamp = timestampFormatLoader.dniDateTimeStringFormatter();
-            expect(convertedTimestamp).toEqual("1st bell, 0:00:00:00, lEfo 1, 1 be");
+            expect(convertedTimestamp).toEqual("1st bell, 0:0:0:0, lEfo 1, 1 be");
         });
         test("Date in DE", () => {
             const dniGorahyanInstantiated = new DniGorahyan();

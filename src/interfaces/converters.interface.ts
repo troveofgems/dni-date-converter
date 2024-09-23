@@ -1,4 +1,4 @@
-import {DniGorahyan} from "../index";
+import DniGorahyan from "../index";
 
 export interface Converters {
     surfaceToCavern: (surfaceDateTime?: Date | string | null | undefined) => DniGorahyan;

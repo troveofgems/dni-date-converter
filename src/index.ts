@@ -406,15 +406,6 @@ export default class DniGorahyan {
         return this.gorahyan.timestampArtifacts.cavern.readonly.timeDeltasCalculated.gahrtahvoShiftedDelta;
     }
 
-/*    set calculatedPahrtahvoDelta(delta: number) {
-        this.gorahyan.timestampArtifacts.cavern.bigs.timeDeltasCalculated.pahrtahvoShiftedDelta = Big(delta);
-        this.gorahyan.timestampArtifacts.cavern.readonly.timeDeltasCalculated.pahrtahvoShiftedDelta = delta;
-    }
-
-    get calculatedPahrtahvoDelta() {
-        return this.gorahyan.timestampArtifacts.cavern.readonly.timeDeltasCalculated.pahrtahvoShiftedDelta;
-    }*/
-
     set calculatedTahvoDelta(delta: number) {
         this.gorahyan.timestampArtifacts.cavern.bigs.timeDeltasCalculated.tahvoShiftedDelta = Big(delta);
         this.gorahyan.timestampArtifacts.cavern.readonly.timeDeltasCalculated.tahvoShiftedDelta = delta;
@@ -520,9 +511,6 @@ export default class DniGorahyan {
     }
 }
 
-export function buildNewDniGorahyan(): DniGorahyan {
+export function BuildDniGorahyan() {
     return new DniGorahyan();
 }
-
-/*let test = new DniGorahyan();
-test.tests.runControlTests();*/

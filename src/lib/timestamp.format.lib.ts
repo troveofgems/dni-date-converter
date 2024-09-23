@@ -1,6 +1,7 @@
 import DniGorahyan from "../index";
 import UtilsLib from "./utils.lib";
 import { setNthBell } from "./surface.converter.lib";
+import { toBase25 } from "./base.25.lib";
 
 const { padValue } = UtilsLib();
 
@@ -22,10 +23,21 @@ export const TimestampFormatLoaders = (dniGorahyan: DniGorahyan) => {
 
         // Set Time and Date String
         let
-            constructedTime = dniGorahyan.gahrtahvotee + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn,
-            constructedDate = resolvedVaileeText + " " + dniGorahyan.yahrtee + ", " + hahrteeShift + epochStamp;
+            constructedTime = dniGorahyan.useDniFontMapping ?
+                toBase25(dniGorahyan.gahrtahvotee) + ":" +
+                toBase25(dniGorahyan.tahvotee) + ":" +
+                toBase25(dniGorahyan.gorahntee) + ":" +
+                toBase25(dniGorahyan.prorahntee)
+                : dniGorahyan.gahrtahvotee + ":" + paddedTahvo + ":" + paddedGorahn + ":" + paddedProrahn,
+            constructedDate =
+                dniGorahyan.useDniFontMapping ?
+                resolvedVaileeText + " " +
+                    toBase25(dniGorahyan.yahrtee) + ", " +
+                    toBase25(hahrteeShift) +
+                    epochStamp
+                    : resolvedVaileeText + " " + dniGorahyan.yahrtee + ", " + hahrteeShift + epochStamp
 
-        if(dniGorahyan.includeNthBell || dniGorahyan.outputType === 0) {
+        if(dniGorahyan.outputType === 0 || dniGorahyan.includeNthBell) {
             constructedBell = setNthBell(dniGorahyan.pahrtahvotee);
             constructedBell += dniGorahyan.useDniFontMapping ? " bell, " : " Bell, ";
         }
@@ -34,9 +46,9 @@ export const TimestampFormatLoaders = (dniGorahyan: DniGorahyan) => {
             case 0:
                 return `${constructedBell}${constructedTime}, ${constructedDate}`;
             case 1:
-                return `${constructedDate} ${constructedTime}`;
+                return `${constructedBell}${constructedDate} ${constructedTime}`;
             case 2:
-                return `${constructedTime}, ${constructedDate}`;
+                return `${constructedBell}${constructedTime}, ${constructedDate}`;
             default:
                 return `${constructedBell}${constructedTime}, ${constructedDate}`;
         }

@@ -113,7 +113,7 @@ export interface DniDatetimeConstantsInterface {
                 ninthTest: string,
                 tenthTest: string,
                 eleventhTest: string,
-                twelthTest: string
+                twelfthTest: string
             }
         },
         importantDates: {

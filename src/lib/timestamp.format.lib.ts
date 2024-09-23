@@ -38,7 +38,7 @@ export const TimestampFormatLoaders = (dniGorahyan: DniGorahyan) => {
                     : resolvedVaileeText + " " + dniGorahyan.yahrtee + ", " + hahrteeShift + epochStamp
 
         if(dniGorahyan.outputType === 0 || dniGorahyan.includeNthBell) {
-            constructedBell = setNthBell(dniGorahyan.pahrtahvotee);
+            constructedBell = dniGorahyan.useDniFontMapping ? `${toBase25(dniGorahyan.pahrtahvotee)}` : setNthBell(dniGorahyan.pahrtahvotee);
             constructedBell += dniGorahyan.useDniFontMapping ? " bell, " : " Bell, ";
         }
 

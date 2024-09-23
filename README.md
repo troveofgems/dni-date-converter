@@ -205,29 +205,29 @@ let dniClock = BuildDniGorahyan();
 // Change to Trove of Gems Timestamp Format (Default):
 dniClock.switchTimestampFormatter(0);
 dniClock.converters.surfaceToCavern();
-console.log(dniClock.systemProvidedSurfaceTS); // => 25th Bell, 4:22:05:07, Leevot 8, 9680 DE
+console.log(dniClock.systemProvidedSurfaceTS); // => 25th Bell, 4:22:13:05, Leevot 8, 9680 DE
 
 // Change to Guild of Archivist Timestamp Format Type 1:
 dniClock.includeNthBell = false;
 dniClock.switchTimestampFormatter(1);
 dniClock.converters.surfaceToCavern();
-console.log(dniClock.systemProvidedSurfaceTS); // => Leevot 8, 9680 DE 4:22:05:07
+console.log(dniClock.systemProvidedSurfaceTS); // => Leevot 8, 9680 DE 4:22:13:05
 
 // Change to Guild of Archivist Timestamp Format Type 2:
 dniClock.switchTimestampFormatter(2);
 dniClock.converters.surfaceToCavern();
-console.log(dniClock.systemProvidedSurfaceTS); // => 4:22:05:07, Leevot 8, 9680 DE
+console.log(dniClock.systemProvidedSurfaceTS); // => 4:22:13:05, Leevot 8, 9680 DE
 
 // Include the Pahrtahvo or nth Bell as part of the DateTime String:
 dniClock.switchTimestampFormatter(1);
 dniClock.includeNthBell = true;
 dniClock.converters.surfaceToCavern();
-console.log(dniClock.systemProvidedSurfaceTS); // => 25th Bell, Leevot 8, 9680 DE 4:22:05:07
+console.log(dniClock.systemProvidedSurfaceTS); // => 25th Bell, Leevot 8, 9680 DE 4:22:13:05
 
 // Use D'ni Font Mapping:
 dniClock.useDniFontMapping = true;
 dniClock.converters.surfaceToCavern();
-console.log(dniClock.systemProvidedSurfaceTS); // => 25th bell, lEvot 8, %@5 de 4:\:5:7
+console.log(dniClock.systemProvidedSurfaceTS); // => 10 bell, lEvot 8, %@5 de 4:\:#:5
 ```
 
 ## Jest Test Suites
